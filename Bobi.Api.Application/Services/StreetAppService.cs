@@ -1,0 +1,163 @@
+﻿using Bobi.Api.Application.Contracts.DTO.RequestModel;
+using Bobi.Api.Application.Contracts.DTO.ResponseModel;
+using Bobi.Api.Application.Contracts.Interfaces;
+using Bobi.Api.Application.Domain.Shared.Abstract;
+using Bobi.Api.Domain.Address;
+using Bobi.Api.EntityFrameworkCore.Repositories.Interfaces;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Bobi.Api.Application.Services
+{
+    public class StreetAppService : IStreetAppService
+    {
+
+        private readonly ILogger<StreetAppService> _logger;
+        private readonly IRepository<Street> _streetRepository;
+
+        public StreetAppService(ILogger<StreetAppService> logger, IRepository<Street> streetRepository)
+        {
+            _logger = logger;
+            _streetRepository = streetRepository;
+        }
+
+        private BaseReturnModel<T> HandleError<T>(string errorMessage)
+        {
+            _logger.LogError(errorMessage);
+            return new BaseReturnModel<T>
+            {
+                Error = new List<ErrorModel>
+                {
+                    new ErrorModel(ErrorCodes.ProcessNotCompleted, errorMessage)
+                }
+            };
+        }
+
+        public async Task<BaseReturnModel<StreetResponseModel>> CreateAsync(StreetRequestModel item)
+        {
+            try
+            {
+                var street = new Street
+                {
+                    Name = item.Name
+                };
+                var result = await _streetRepository.CreateAsync(street);
+                if (!result.IsSuccess)
+                {
+                    return HandleError<StreetResponseModel>("Street create fault!");
+                }
+                return new BaseReturnModel<StreetResponseModel>
+                {
+                    Data = new StreetResponseModel
+                    {
+                        Name = result.Data.Name
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                return HandleError<StreetResponseModel>(ex.Message);
+            }
+        }
+
+        public async Task<BaseReturnModel<bool>> DeleteAsync(int id)
+        {
+            var result = await _streetRepository.DeleteAsync(id);
+            if (!result.IsSuccess)
+            {
+                return HandleError<bool>("Street delete fault!");
+            }
+            _logger.LogInformation($"Street deleted. Id:{id}");
+            return new BaseReturnModel<bool> { Data = true };
+        }
+
+        public async Task<BaseReturnModel<StreetResponseModel>> GetByIdAsync(int id)
+        {
+            var result = await _streetRepository.GetByIdAsync(id);
+            if (!result.IsSuccess)
+            {
+                return HandleError<StreetResponseModel>("Street get fault!");
+            }
+            return new BaseReturnModel<StreetResponseModel>
+            {
+                Data = new StreetResponseModel
+                {
+                    Id = result.Data.Id,
+                    Name = result.Data.Name
+                }
+            };
+        }
+
+        public async Task<BaseReturnModel<List<StreetResponseModel>>> GetListAsync()
+        {
+            var result = await _streetRepository.GetListAsync();
+            if (!result.IsSuccess)
+            {
+                return HandleError<List<StreetResponseModel>>("Street list get fault!");
+
+            }
+            var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new StreetResponseModel
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToList();
+
+            return new BaseReturnModel<List<StreetResponseModel>>
+            {
+                Data = filteredData
+            };
+        }
+
+        public async Task<BaseReturnModel<List<StreetResponseModel>>> GetListByFilterAsync(Expression<Func<Street, bool>> exp)
+        {
+            var result = await _streetRepository.GetListByFilterAsync(exp);
+            if (!result.IsSuccess)
+            {
+                return HandleError<List<StreetResponseModel>>("Street get fault!");
+            }
+            return new BaseReturnModel<List<StreetResponseModel>>
+            {
+                Data = result.Data.Select(x => new StreetResponseModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList(),
+            };
+        }
+
+        public async Task<BaseReturnModel<StreetResponseModel>> UpdateAsync(StreetRequestModel item)
+        {
+            try
+            {
+                var report = await _streetRepository.GetByIdAsync(item.Id);
+                if (!report.IsSuccess)
+                {
+                    return HandleError<StreetResponseModel>("Street update fault!");
+                }
+                report.Data.Name = item.Name;
+                var result = await _streetRepository.UpdateAsync(report.Data);
+                if (!result.IsSuccess)
+                {
+                    return HandleError<StreetResponseModel>("Street update fault!");
+                }
+                return new BaseReturnModel<StreetResponseModel>
+                {
+                    Data = new StreetResponseModel
+                    {
+                        Id = result.Data.Id,
+                        Name = result.Data.Name
+                    }
+                };
+            }
+            catch (Exception)
+            {
+                return HandleError<StreetResponseModel>("Street update fault!");
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bobi.Api.Application.Contracts\Bobi.Api.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Bobi.Api.Domain\Bobi.Api.Domain.csproj" />
+    <ProjectReference Include="..\Bobi.Api.EntityFrameworkCore\Bobi.Api.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
+</Project>

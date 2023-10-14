@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bobi.Api.Application.Contracts\Bobi.Api.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Bobi.Api.Application\Bobi.Api.Application.csproj" />
+    <ProjectReference Include="..\Bobi.Api.EntityFrameworkCore\Bobi.Api.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
+</Project>
