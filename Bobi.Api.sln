@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bobi.Api", "Bobi.Api\Bobi.Api.csproj", "{802AC857-BAA0-406F-BC86-D656F17F7826}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bobi.Api", "Bobi.Api\Bobi.Api.csproj", "{802AC857-BAA0-406F-BC86-D656F17F7826}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bobi.Api.Application", "Bobi.Api.Application\Bobi.Api.Application.csproj", "{C5DC5633-4757-4A9E-A422-2052762B19AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bobi.Api.Application", "Bobi.Api.Application\Bobi.Api.Application.csproj", "{C5DC5633-4757-4A9E-A422-2052762B19AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bobi.Api.Application.Contracts", "Bobi.Api.Application.Contracts\Bobi.Api.Application.Contracts.csproj", "{F1655C60-0428-4510-ACFC-A47DA4FBCE01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bobi.Api.Application.Contracts", "Bobi.Api.Application.Contracts\Bobi.Api.Application.Contracts.csproj", "{F1655C60-0428-4510-ACFC-A47DA4FBCE01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bobi.Api.Domain", "Bobi.Api.Domain\Bobi.Api.Domain.csproj", "{867931BF-A91E-49C2-BFEA-254BC1245C25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bobi.Api.Domain", "Bobi.Api.Domain\Bobi.Api.Domain.csproj", "{867931BF-A91E-49C2-BFEA-254BC1245C25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bobi.Api.EntityFrameworkCore", "Bobi.Api.EntityFrameworkCore\Bobi.Api.EntityFrameworkCore.csproj", "{46840FF5-23CC-429C-8511-0FEAAC554D90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bobi.Api.Application.Domain.Shared", "Bobi.Api.Application.Domain.Shared\Bobi.Api.Application.Domain.Shared.csproj", "{0EA3D45D-B562-42A7-8D20-39152B8FC5D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bobi.Api.Application.Domain.Shared", "Bobi.Api.Application.Domain.Shared\Bobi.Api.Application.Domain.Shared.csproj", "{0EA3D45D-B562-42A7-8D20-39152B8FC5D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bobi.Api.MongoDb", "Bobi.Api.MongoDb\Bobi.Api.MongoDb.csproj", "{29CF1DED-D1E5-4457-AC42-3BCABAD1C1C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +37,14 @@ Global
 		{867931BF-A91E-49C2-BFEA-254BC1245C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{867931BF-A91E-49C2-BFEA-254BC1245C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{867931BF-A91E-49C2-BFEA-254BC1245C25}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46840FF5-23CC-429C-8511-0FEAAC554D90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46840FF5-23CC-429C-8511-0FEAAC554D90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46840FF5-23CC-429C-8511-0FEAAC554D90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46840FF5-23CC-429C-8511-0FEAAC554D90}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0EA3D45D-B562-42A7-8D20-39152B8FC5D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0EA3D45D-B562-42A7-8D20-39152B8FC5D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EA3D45D-B562-42A7-8D20-39152B8FC5D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EA3D45D-B562-42A7-8D20-39152B8FC5D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29CF1DED-D1E5-4457-AC42-3BCABAD1C1C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29CF1DED-D1E5-4457-AC42-3BCABAD1C1C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29CF1DED-D1E5-4457-AC42-3BCABAD1C1C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29CF1DED-D1E5-4457-AC42-3BCABAD1C1C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

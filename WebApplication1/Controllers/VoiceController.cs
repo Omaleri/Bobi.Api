@@ -1,6 +1,9 @@
 ﻿using Bobi.Api.Application.Contracts.DTO.RequestModel;
 using Bobi.Api.Application.Contracts.Interfaces;
+using Bobi.Api.Domain.Address;
+using Bobi.Api.Domain.Build;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace Bobi.Api.Controller
 {
@@ -55,7 +58,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpPut]
-        [Route("api/voice/")]
+        [Route("api/voiceUpdate")]
         public async Task<IActionResult> UpdateAsync(VoiceRequestModel requestModel)
         {
             var result = await _voiceAppService.UpdateAsync(requestModel);
@@ -68,7 +71,20 @@ namespace Bobi.Api.Controller
         }
 
         [HttpGet]
-        [Route("api/voice/")]
+        [Route("api/filteredlist")]
+        public async Task<IActionResult> GetListByFilterAsync(Expression<Func<Voice, bool>> exp)
+        {
+            var result = await _voiceAppService.GetListByFilterAsync(exp);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            _logger.LogError("Voice get fault!");
+            return StatusCode(result.Error[0].Code, result.Error);
+        }
+
+        [HttpGet]
+        [Route("api/list")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _voiceAppService.GetListAsync();

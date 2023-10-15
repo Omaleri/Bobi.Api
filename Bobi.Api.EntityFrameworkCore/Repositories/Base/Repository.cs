@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Bobi.Api.EntityFrameworkCore.Repositories.Base
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public abstract class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly BobiDbContext _context;
         public Repository(BobiDbContext context)

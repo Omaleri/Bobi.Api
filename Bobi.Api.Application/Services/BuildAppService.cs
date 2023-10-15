@@ -2,26 +2,20 @@
 using Bobi.Api.Application.Contracts.DTO.ResponseModel;
 using Bobi.Api.Application.Contracts.Interfaces;
 using Bobi.Api.Application.Domain.Shared.Abstract;
-using Bobi.Api.Domain.Address;
 using Bobi.Api.Domain.Build;
-using Bobi.Api.EntityFrameworkCore.Repositories.Interfaces;
+using Bobi.Api.MongoDb.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bobi.Api.Application.Services
 {
-    public class BuildAppSettings : IBuildAppService
+    public class BuildAppService : IBuildAppService
     {
-        private readonly ILogger<BuildAppSettings> _logger;
+        private readonly ILogger<BuildAppService> _logger;
         private readonly IRepository<Build> _buildRepository;
         private readonly IRepository<Device> _deviceRepository;
 
-        public BuildAppSettings(ILogger<BuildAppSettings> logger, IRepository<Build> buildRepository, IRepository<Device> deviceRepository)
+        public BuildAppService(ILogger<BuildAppService> logger, IRepository<Build> buildRepository, IRepository<Device> deviceRepository)
         {
             _logger = logger;
             _buildRepository = buildRepository;

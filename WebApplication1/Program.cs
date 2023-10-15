@@ -34,8 +34,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/", () => "I am Alive!");
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -8,6 +8,8 @@ namespace Bobi.Api.Controller
 {
     public class AddressController : ControllerBase
     {
+
+
         private readonly ILogger<AddressController> _logger;
         private readonly IAddressAppService _addressAppService;
 
@@ -57,7 +59,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpPut]
-        [Route("api/address/")]
+        [Route("api/addressUpdate")]
         public async Task<IActionResult> UpdateAsync(AddressRequestModel requestModel)
         {
             var result = await _addressAppService.UpdateAsync(requestModel);
@@ -70,7 +72,20 @@ namespace Bobi.Api.Controller
         }
 
         [HttpGet]
-        [Route("api/address/")]
+        [Route("api/filteredlist")]
+        public async Task<IActionResult> GetListByFilterAsync(Expression<Func<Address, bool>> exp)
+        {
+            var result = await _addressAppService.GetListByFilterAsync(exp);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            _logger.LogError("Address get fault!");
+            return StatusCode(result.Error[0].Code, result.Error);
+        }
+
+        [HttpGet]
+        [Route("api/list")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _addressAppService.GetListAsync();

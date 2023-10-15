@@ -2,9 +2,8 @@
 using Bobi.Api.Application.Contracts.DTO.ResponseModel;
 using Bobi.Api.Application.Contracts.Interfaces;
 using Bobi.Api.Application.Domain.Shared.Abstract;
-using Bobi.Api.Domain.Address;
 using Bobi.Api.Domain.Build;
-using Bobi.Api.EntityFrameworkCore.Repositories.Interfaces;
+using Bobi.Api.MongoDb.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 

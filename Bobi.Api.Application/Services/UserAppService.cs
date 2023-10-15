@@ -2,15 +2,9 @@
 using Bobi.Api.Application.Contracts.DTO.ResponseModel;
 using Bobi.Api.Application.Contracts.Interfaces;
 using Bobi.Api.Application.Domain.Shared.Abstract;
-using Bobi.Api.Domain.Address;
 using Bobi.Api.Domain.User;
-using Bobi.Api.EntityFrameworkCore.Repositories.Interfaces;
+using Bobi.Api.MongoDb.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bobi.Api.Application.Services
 {
