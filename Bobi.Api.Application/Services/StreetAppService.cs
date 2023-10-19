@@ -129,7 +129,11 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var report = await _streetRepository.GetByIdAsync(item.Id);
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<StreetResponseModel>("Invalid int format!");
+                }
+                var report = await _streetRepository.GetByIdAsync(idAsInt);
                 if (!report.IsSuccess)
                 {
                     return HandleError<StreetResponseModel>("Street update fault!");

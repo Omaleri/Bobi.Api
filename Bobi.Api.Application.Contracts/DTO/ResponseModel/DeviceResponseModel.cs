@@ -9,7 +9,7 @@ namespace Bobi.Api.Application.Contracts.DTO.ResponseModel
 {
     public class DeviceResponseModel : BaseDtoModel
     {
-        public int BuildId { get; set; }
+        public string BuildId { get; set; }
         public string DeviceName { get; set; }
     }
 }

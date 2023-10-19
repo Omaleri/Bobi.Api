@@ -1,7 +1,10 @@
 ﻿using Bobi.Api.Application.Contracts.Interfaces;
 using Bobi.Api.Application.Domain.Shared.Abstract;
+using Bobi.Api.Domain.User;
 using Bobi.Api.MongoDb.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Linq.Expressions;
@@ -17,13 +20,37 @@ namespace Bobi.Api.MongoDb.Repositories.Base
             var database = client.GetDatabase(configuration.GetSection("MongoDB:DatabaseName").Value);
             _collection = database.GetCollection<T>(nameof(T));
         }
+        private readonly ILogger<T> _logger;
+        private readonly Role _role;
+
+        private BaseReturnModel<T> HandleError<T>(string errorMessage)
+        {
+            _logger.LogError(errorMessage);
+            return new BaseReturnModel<T>
+            {
+                Error = new List<ErrorModel>
+                {
+                    new ErrorModel(ErrorCodes.ProcessNotCompleted, errorMessage)
+                }
+            };
+        }
+
         public async Task<BaseReturnModel<T>> CreateAsync(T item)
         {
             try
             {
-                item.CreationTime = DateTime.Now;
-
                 await _collection.InsertOneAsync(item);
+                if (_collection == null)
+                {
+                    return HandleError<T>("Create fault!");
+                }
+                item.CreationTime = DateTime.UtcNow;
+                item.IsDeleted = false;
+                item.IsActive = true;
+                item.CreatedUserId = 0;
+                item.IsActive = true;
+                item.LastUpdatedUserId = 0;
+                item.LastModificationTime = DateTime.UtcNow;
                 return new BaseReturnModel<T>
                 {
                     Data = item,
@@ -35,8 +62,8 @@ namespace Bobi.Api.MongoDb.Repositories.Base
                 return new BaseReturnModel<T>
                 {
                     Data = item,
-                    Error = new List<ErrorModel> 
-                    { 
+                    Error = new List<ErrorModel>
+                    {
                         new ErrorModel(0, ex.Message)
                     }
                 };
@@ -46,49 +73,338 @@ namespace Bobi.Api.MongoDb.Repositories.Base
 
         public async Task<BaseReturnModel<List<T>>> CreateManyAsync(List<T> item)
         {
-            throw new NotImplementedException();
-            item.ForEach(x => 
+            try
             {
-                x.CreationTime = DateTime.UtcNow;
-                x.IsDeleted = false;
-                x.IsActive = true;
-            });
-            await _collection.InsertManyAsync(item);
+                await _collection.InsertManyAsync(item);
+                if (_collection == null)
+                {
+                    return HandleError<List<T>>("Create many fault!");
+                }
+                item.ForEach(x =>
+                {
+                    x.CreationTime = DateTime.UtcNow;
+                    x.IsDeleted = false;
+                    x.IsActive = true;
+                    x.CreatedUserId = 0;
+                    x.IsActive = true;
+                    x.LastUpdatedUserId = 0;
+                    x.LastModificationTime = DateTime.UtcNow;
+
+                });
+
+                return new BaseReturnModel<List<T>> { Data = item };
+            }
+            catch (Exception ex)
+            {
+                return HandleError<List<T>>("Create many fault!");
+
+            }
         }
 
-        public Task<BaseReturnModel<bool>> DeleteAsync(int id)
+        public async Task<BaseReturnModel<bool>> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var filter = Builders<T>.Filter.Eq("_id", id);
+                var result = await _collection.DeleteOneAsync(filter);
+
+                if (result.DeletedCount == 1)
+                {
+                    return new BaseReturnModel<bool>
+                    {
+                        Data = true,
+                    };
+                }
+                else
+                {
+                    return new BaseReturnModel<bool>
+                    {
+                        Data = false,
+                        Error = new List<ErrorModel>
+                        {
+                            new ErrorModel(0, "Id bulunamadı.")
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseReturnModel<bool>
+                {
+                    Data = false,
+                    Error = new List<ErrorModel>
+                    {
+                        new ErrorModel(0, ex.Message)
+                    }
+                };
+            }
         }
 
-        public Task<BaseReturnModel<bool>> DeleteManyAsync(Expression<Func<T, bool>> exp)
+        public async Task<BaseReturnModel<bool>> DeleteManyAsync(Expression<Func<T, bool>> exp)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _collection.DeleteManyAsync(exp);
+                if (result.DeletedCount > 0)
+                {
+                    return new BaseReturnModel<bool>
+                    {
+                        Data = true,
+                    };
+                }
+                else
+                {
+                    return new BaseReturnModel<bool>
+                    {
+                        Data = false,
+                        Error = new List<ErrorModel>
+                    {
+                        new ErrorModel(0, "Belgeler bulunamadı.")
+                    }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseReturnModel<bool>
+                {
+                    Data = false,
+                    Error = new List<ErrorModel>
+                    {
+                        new ErrorModel(0, ex.Message)
+                    }
+                };
+            }
+
         }
 
-        public Task<BaseReturnModel<T>> GetByFilterAsync(Expression<Func<T, bool>> exp)
+        public async Task<BaseReturnModel<T>> GetByFilterAsync(Expression<Func<T, bool>> exp)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var filter = Builders<T>.Filter.Where(exp);
+                var result = await _collection.Find(filter).FirstOrDefaultAsync();
+                result.CreationTime = DateTime.UtcNow;
+                result.IsDeleted = false;
+                result.IsActive = true;
+                result.CreatedUserId = 0;
+                result.IsActive = true;
+                result.LastUpdatedUserId = 0;
+                result.LastModificationTime = DateTime.UtcNow;
+                if (result != null)
+                {
+                    return new BaseReturnModel<T>
+                    {
+                        Data = result,
+                    };
+                }
+                else
+                {
+                    return new BaseReturnModel<T>
+                    {
+                        Data = null,
+                        Error = new List<ErrorModel>
+                {
+                    new ErrorModel(0, "Filtreye göre dosya bulunamadı.")
+                }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseReturnModel<T>
+                {
+                    Data = null,
+                    Error = new List<ErrorModel>
+            {
+                new ErrorModel(0, ex.Message)
+            }
+                };
+            }
         }
 
-        public Task<BaseReturnModel<T>> GetByIdAsync(int id)
+        public async Task<BaseReturnModel<T>> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var filter = Builders<T>.Filter.Eq("_id", id);
+                var result = await _collection.Find(filter).FirstOrDefaultAsync();
+
+                if (result != null)
+                {
+                    result.CreationTime = DateTime.UtcNow;
+                    result.IsDeleted = false;
+                    result.IsActive = true;
+                    result.CreatedUserId = 0;
+                    result.LastUpdatedUserId = 0;
+                    result.LastModificationTime = DateTime.UtcNow;
+
+                    return new BaseReturnModel<T>
+                    {
+                        Data = result
+                    };
+                }
+                else
+                {
+                    return new BaseReturnModel<T>
+                    {
+                        Data = null,
+                        Error = new List<ErrorModel>
+                        {
+                            new ErrorModel(0, $"Bu id: {id}'de bir dosya bulunamadı.")
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseReturnModel<T>
+                {
+                    Data = null,
+                    Error = new List<ErrorModel>
+                    {
+                        new ErrorModel(0, ex.Message)
+                    }
+                };
+            }
         }
 
-        public Task<BaseReturnModel<List<T>>> GetListAsync()
+        public async Task<BaseReturnModel<List<T>>> GetListAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _collection.Find(Builders<T>.Filter.Empty).ToListAsync();
+
+                if (result != null && result.Any())
+                {
+                    result.ForEach(item =>
+                    {
+                        item.CreationTime = DateTime.UtcNow;
+                        item.IsDeleted = false;
+                        item.IsActive = true;
+                        item.CreatedUserId = 0;
+                        item.LastUpdatedUserId = 0;
+                        item.LastModificationTime = DateTime.UtcNow;
+                    });
+
+                    return new BaseReturnModel<List<T>>
+                    {
+                        Data = result,
+                    };
+                }
+                else
+                {
+                    return new BaseReturnModel<List<T>>
+                    {
+                        Data = null,
+                        Error = new List<ErrorModel>
+                        {
+                            new ErrorModel(0, "Hiç belge bulunamadı.")
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseReturnModel<List<T>>
+                {
+                    Data = null,
+                    Error = new List<ErrorModel>
+                    {
+                        new ErrorModel(0, ex.Message)
+                    }
+                };
+            }
         }
 
-        public Task<BaseReturnModel<List<T>>> GetListByFilterAsync(Expression<Func<T, bool>> exp)
+        public async Task<BaseReturnModel<List<T>>> GetListByFilterAsync(Expression<Func<T, bool>> exp)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var filter = Builders<T>.Filter.Where(exp);
+                var result = await _collection.Find(filter).ToListAsync();
+
+                if (result != null && result.Any())
+                {
+                    result.ForEach(item =>
+                    {
+                        item.CreationTime = DateTime.UtcNow;
+                        item.IsDeleted = false;
+                        item.IsActive = true;
+                        item.CreatedUserId = 0;
+                        item.LastUpdatedUserId = 0;
+                        item.LastModificationTime = DateTime.UtcNow;
+                    });
+
+                    return new BaseReturnModel<List<T>>
+                    {
+                        Data = result,
+                    };
+                }
+                else
+                {
+                    return new BaseReturnModel<List<T>>
+                    {
+                        Data = null,
+                        Error = new List<ErrorModel>
+                {
+                    new ErrorModel(0, "Bu filtrelemeye göre belge bulunamadı.")
+                }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseReturnModel<List<T>>
+                {
+                    Data = null,
+                    Error = new List<ErrorModel>
+            {
+                new ErrorModel(0, ex.Message)
+            }
+                };
+            }
         }
 
-        public Task<BaseReturnModel<T>> UpdateAsync(T item)
+        public async Task<BaseReturnModel<T>> UpdateAsync(T item)
         {
-            throw new NotImplementedException();
+
+            try
+            {
+                var filter = Builders<T>.Filter.Eq("_id", item.Id);
+                var result = await _collection.ReplaceOneAsync(filter, item);
+
+                if (result.IsAcknowledged && result.ModifiedCount > 0)
+                {
+                    item.LastModificationTime = DateTime.UtcNow;
+                    return new BaseReturnModel<T>
+                    {
+                        Data = item,
+                    };
+                }
+                else
+                {
+                    return new BaseReturnModel<T>
+                    {
+                        Data = null,
+                        Error = new List<ErrorModel>
+                        {
+                            new ErrorModel(0, $"Belge güncellenemedi id: {item.Id}.")
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseReturnModel<T>
+                {
+                    Data = null,
+                    Error = new List<ErrorModel>
+                    {
+                        new ErrorModel(0, ex.Message)
+                    }
+                };
+            }
         }
     }
 }

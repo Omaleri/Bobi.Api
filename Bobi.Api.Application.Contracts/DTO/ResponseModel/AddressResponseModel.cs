@@ -9,11 +9,11 @@ namespace Bobi.Api.Application.Contracts.DTO.ResponseModel
 {
     public class AddressResponseModel : BaseDtoModel
     {
-        public int CityId { get; set; }
-        public int ProvinceId { get; set; }
-        public int TownId { get; set; }
-        public int NumberId { get; set; }
-        public int StreetId { get; set; }
+        public string CityId { get; set; }
+        public string ProvinceId { get; set; }
+        public string TownId { get; set; }
+        public string NumberId { get; set; }
+        public string StreetId { get; set; }
         public string OpenAddress { get; set; }
     }
 }

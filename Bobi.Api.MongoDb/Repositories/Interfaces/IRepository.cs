@@ -1,5 +1,6 @@
 ﻿using Bobi.Api.Application.Contracts.Interfaces;
 using Bobi.Api.Application.Domain.Shared.Abstract;
+using Bobi.Api.Domain.User;
 using System.Linq.Expressions;
 
 namespace Bobi.Api.MongoDb.Repositories.Interfaces

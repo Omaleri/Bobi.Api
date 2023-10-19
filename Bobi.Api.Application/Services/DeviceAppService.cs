@@ -133,7 +133,11 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var device = await _deviceRepository.GetByIdAsync(item.Id);
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<DeviceResponseModel>("Invalid int format!");
+                }
+                var device = await _deviceRepository.GetByIdAsync(idAsInt);
                 if (!device.IsSuccess)
                 {
                     return HandleError<DeviceResponseModel>("Device update fault!");

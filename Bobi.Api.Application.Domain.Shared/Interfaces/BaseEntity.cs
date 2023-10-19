@@ -1,17 +1,18 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Bobi.Api.Application.Contracts.Interfaces
 {
     public abstract class BaseEntity
     {
-        [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public int Id { get; set; }
+        [JsonIgnore]
+        public ObjectId Id { get; set; }
 
         public int CreatedUserId { get; set; }
         public DateTime CreationTime { get; set; }

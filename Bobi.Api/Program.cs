@@ -2,6 +2,7 @@ using Bobi.Api.Application.Contracts.Interfaces;
 using Bobi.Api.Application.Services;
 using Bobi.Api.MongoDb.Repositories.Base;
 using Bobi.Api.MongoDb.Repositories.Interfaces;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddScoped<IStreetAppService, StreetAppService>();
 builder.Services.AddScoped<ITownAppService, TownAppService>();
 builder.Services.AddScoped<IUserAppService, UserAppService>();
 builder.Services.AddScoped<IVoiceAppService, VoiceAppService>();
+builder.Services.AddScoped<IRoleAppService, RoleAppService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();

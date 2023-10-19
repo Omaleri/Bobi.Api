@@ -128,7 +128,11 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var report = await _provinceRepository.GetByIdAsync(item.Id);
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<ProvinceResponseModel>("Invalid int format!");
+                }
+                var report = await _provinceRepository.GetByIdAsync(idAsInt);
                 if (!report.IsSuccess)
                 {
                     return HandleError<ProvinceResponseModel>("Province update fault!");

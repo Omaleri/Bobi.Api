@@ -82,7 +82,6 @@ namespace Bobi.Api.Application.Services
             {
                 Data = new TownResponseModel
                 {
-                    Id = result.Data.Id,
                     Name = result.Data.Name
                 }
             };
@@ -97,7 +96,6 @@ namespace Bobi.Api.Application.Services
             }
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new TownResponseModel
             {
-                Id = x.Id,
                 Name = x.Name
             }).ToList();
 
@@ -118,7 +116,6 @@ namespace Bobi.Api.Application.Services
             {
                 Data = result.Data.Select(x => new TownResponseModel
                 {
-                    Id = x.Id,
                     Name = x.Name
                 }).ToList(),
             };
@@ -128,7 +125,11 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var report = await _townRepository.GetByIdAsync(item.Id);
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<TownResponseModel>("Invalid int format!");
+                }
+                var report = await _townRepository.GetByIdAsync(idAsInt);
                 if (!report.IsSuccess)
                 {
                     return HandleError<TownResponseModel>("Town update fault!");
@@ -143,7 +144,6 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new TownResponseModel
                     {
-                        Id = result.Data.Id,
                         Name = result.Data.Name
                     }
                 };

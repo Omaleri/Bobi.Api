@@ -3,8 +3,10 @@ using Bobi.Api.Application.Contracts.DTO.ResponseModel;
 using Bobi.Api.Application.Contracts.Interfaces;
 using Bobi.Api.Application.Domain.Shared.Abstract;
 using Bobi.Api.Domain.Address;
+using Bobi.Api.Domain.User;
 using Bobi.Api.MongoDb.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using System.Linq.Expressions;
 
 namespace Bobi.Api.Application.Services
@@ -19,7 +21,6 @@ namespace Bobi.Api.Application.Services
         private readonly IRepository<Province> _provinceRepository;
         private readonly IRepository<Street> _streetRepository;
         private readonly IRepository<Town> _townRepository;
-
 
         public AddressAppService(ILogger<AddressAppService> logger, IRepository<Address> addressRepository, IRepository<Street> streetRepository, IRepository<City> cityRepository, IRepository<Number> numberRepository, IRepository<Province> provinceRepository, IRepository<Town> townRepository)
         {
@@ -47,7 +48,12 @@ namespace Bobi.Api.Application.Services
         public async Task<BaseReturnModel<AddressResponseModel>> CreateAsync(AddressRequestModel item)
         {
             #region Get Street
-            var street = await _streetRepository.GetByFilterAsync(x => x.Id == item.StreetId);
+            ObjectId streetObjectId;
+            if (!ObjectId.TryParse(item.StreetId.ToString(), out streetObjectId))
+            {
+                return HandleError<AddressResponseModel>("Invalid StreetId format!");
+            }
+            var street = await _streetRepository.GetByFilterAsync(x => x.Id == streetObjectId);
             if (!street.IsSuccess)
             {
                 return HandleError<AddressResponseModel>("Get street fault!");
@@ -55,7 +61,12 @@ namespace Bobi.Api.Application.Services
             #endregion
 
             #region Get City
-            var city = await _cityRepository.GetByFilterAsync(x => x.Id == item.CityId);
+            ObjectId cityObjectId;
+            if (!ObjectId.TryParse(item.StreetId.ToString(), out cityObjectId))
+            {
+                return HandleError<AddressResponseModel>("Invalid StreetId format!");
+            }
+            var city = await _cityRepository.GetByFilterAsync(x => x.Id == cityObjectId);
             if (!city.IsSuccess)
             {
                 return HandleError<AddressResponseModel>("Get city fault!");
@@ -63,7 +74,12 @@ namespace Bobi.Api.Application.Services
             #endregion
 
             #region Get Number
-            var number = await _numberRepository.GetByFilterAsync(x => x.Id == item.NumberId);
+            ObjectId numberObjectId;
+            if (!ObjectId.TryParse(item.StreetId.ToString(), out numberObjectId))
+            {
+                return HandleError<AddressResponseModel>("Invalid StreetId format!");
+            }
+            var number = await _numberRepository.GetByFilterAsync(x => x.Id == numberObjectId);
             if (!number.IsSuccess)
             {
                 return HandleError<AddressResponseModel>("Get number fault!");
@@ -71,7 +87,12 @@ namespace Bobi.Api.Application.Services
             #endregion
 
             #region Get Province
-            var province = await _provinceRepository.GetByFilterAsync(x => x.Id == item.ProvinceId);
+            ObjectId provinceObjectId;
+            if (!ObjectId.TryParse(item.StreetId.ToString(), out provinceObjectId))
+            {
+                return HandleError<AddressResponseModel>("Invalid StreetId format!");
+            }
+            var province = await _provinceRepository.GetByFilterAsync(x => x.Id == provinceObjectId);
             if (!province.IsSuccess)
             {
                 return HandleError<AddressResponseModel>("Get Province fault!");
@@ -79,7 +100,12 @@ namespace Bobi.Api.Application.Services
             #endregion
 
             #region Get Town
-            var town = await _townRepository.GetByFilterAsync(x => x.Id == item.TownId);
+            ObjectId townObjectId;
+            if (!ObjectId.TryParse(item.StreetId.ToString(), out townObjectId))
+            {
+                return HandleError<AddressResponseModel>("Invalid StreetId format!");
+            }
+            var town = await _townRepository.GetByFilterAsync(x => x.Id == townObjectId);
             if (!town.IsSuccess)
             {
                 return HandleError<AddressResponseModel>("Get number fault!");
@@ -90,12 +116,11 @@ namespace Bobi.Api.Application.Services
             {
                 Data = new AddressResponseModel
                 {
-                    Id = item.Id,
-                    CityId = city.Data.Id,
-                    NumberId = number.Data.Id,
-                    ProvinceId = province.Data.Id,
-                    StreetId = street.Data.Id,
-                    TownId = town.Data.Id,
+                    CityId = cityObjectId.ToString(),
+                    NumberId = numberObjectId.ToString(),
+                    ProvinceId = provinceObjectId.ToString(),
+                    StreetId = streetObjectId.ToString(),
+                    TownId = townObjectId.ToString(),
                     OpenAddress = item.OpenAddress
                 }
             };
@@ -129,7 +154,6 @@ namespace Bobi.Api.Application.Services
             {
                 Data = new AddressResponseModel
                 {
-                    Id = address.Data.Id,
                     OpenAddress = address.Data.OpenAddress,
                     CityId = address.Data.CityId,
                     NumberId = address.Data.NumberId,
@@ -149,7 +173,6 @@ namespace Bobi.Api.Application.Services
             }
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new AddressResponseModel
             {
-                Id = x.Id,
                 OpenAddress = x.OpenAddress,
                 CityId = x.CityId,
                 NumberId = x.NumberId,
@@ -175,7 +198,6 @@ namespace Bobi.Api.Application.Services
             {
                 Data = result.Data.Select(x => new AddressResponseModel
                 {
-                    Id = x.Id,
                     OpenAddress = x.OpenAddress,
                     CityId = x.CityId,
                     NumberId = x.NumberId,
@@ -190,7 +212,12 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var address = await _addressRepository.GetByIdAsync(item.Id);
+                // ObjectId'i int'e çevirelim, eğer çevrilemezse hata verelim
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<AddressResponseModel>("Invalid int format!");
+                }
+                var address = await _addressRepository.GetByIdAsync(idAsInt);
                 if (!address.IsSuccess)
                 {
                     return HandleError<AddressResponseModel>("Adrress update fault!");
@@ -210,7 +237,6 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new AddressResponseModel
                     {
-                        Id = result.Data.Id,
                         CityId = result.Data.CityId,
                         TownId= result.Data.TownId,
                         StreetId = result.Data.StreetId,

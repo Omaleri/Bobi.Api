@@ -84,7 +84,6 @@ namespace Bobi.Api.Application.Services
             {
                 Data = new UserResponseModel
                 {
-                    Id = result.Data.Id,
                     Email = result.Data.Email,
                     Password = result.Data.Password,
                     RoleId = result.Data.RoleId
@@ -96,7 +95,11 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var user = await _userRepository.GetByIdAsync(item.Id);
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<UserResponseModel>("Invalid int format!");
+                }
+                var user = await _userRepository.GetByIdAsync(idAsInt);
                 if (!user.IsSuccess)
                 {
                     return HandleError<UserResponseModel>("User update fault!");
@@ -104,7 +107,6 @@ namespace Bobi.Api.Application.Services
                 user.Data.RoleId = item.RoleId;
                 user.Data.Email = item.Email;
                 user.Data.Password = item.Password;
-                user.Data.Id = item.Id;
                 var result = await _userRepository.UpdateAsync(user.Data);
                 if (!result.IsSuccess)
                 {
@@ -114,7 +116,6 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new UserResponseModel
                     {
-                        Id = result.Data.Id,
                         Email = result.Data.Email,
                         Password = result.Data.Password,
                         RoleId = result.Data.RoleId

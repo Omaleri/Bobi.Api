@@ -89,7 +89,6 @@ namespace Bobi.Api.Application.Services
             {
                 Data = new VoiceResponseModel
                 {
-                    Id = result.Data.Id,
                     BuildId = result.Data.BuildId,
                     Link = result.Data.Link,
                     VoiceDate = result.Data.VoiceDate,
@@ -108,7 +107,6 @@ namespace Bobi.Api.Application.Services
             }
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new VoiceResponseModel
             {
-                Id = x.Id,
                 BuildId = x.BuildId,
                 Link = x.Link,
                 VoiceDate = x.VoiceDate,
@@ -132,7 +130,6 @@ namespace Bobi.Api.Application.Services
             {
                 Data = result.Data.Select(x => new VoiceResponseModel
                 {
-                    Id = x.Id,
                     BuildId = x.BuildId,
                     Link = x.Link,
                     VoiceDate = x.VoiceDate,
@@ -145,7 +142,11 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var voice = await _voiceRepository.GetByIdAsync(item.Id);
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<VoiceResponseModel>("Invalid int format!");
+                }
+                var voice = await _voiceRepository.GetByIdAsync(idAsInt);
                 if (!voice.IsSuccess)
                 {
                     return HandleError<VoiceResponseModel>("Voice update fault!");
@@ -163,7 +164,6 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new VoiceResponseModel
                     {
-                        Id = result.Data.Id,
                         BuildId = result.Data.BuildId,
                         Link = result.Data.Link,
                         VoiceDate = result.Data.VoiceDate,

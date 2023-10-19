@@ -5,6 +5,8 @@ using Bobi.Api.Application.Domain.Shared.Abstract;
 using Bobi.Api.Domain.Build;
 using Bobi.Api.MongoDb.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
+using System;
 using System.Linq.Expressions;
 
 namespace Bobi.Api.Application.Services
@@ -61,8 +63,7 @@ namespace Bobi.Api.Application.Services
                 {
                     var device = new Device
                     {
-                        Id = deviceItem.Id,
-                        //BuildId = ,
+                        BuildId = deviceItem.BuildId.ToString(),
                         DeviceName = deviceItem.DeviceName
                     };
                     deviceList.Add(device);
@@ -74,21 +75,19 @@ namespace Bobi.Api.Application.Services
                 }
             }
             #endregion        
-
+            
             return new BaseReturnModel<BuildResponseModel>
             {
                 Data = new BuildResponseModel
                 {
                     AddressId = item.AddressId,
-                    Id = item.Id,
                     DateOfDestructive = item.DateOfDestructive,
                     NumberOfFloors = item.NumberOfFloors,
                     Situation = item.Situation,
                     TypeOfFeature = item.TypeOfFeature,
                     Device = deviceList.Select(x => new DeviceResponseModel
                     {
-                        Id = x.Id,
-                        BuildId = build.Id,
+                        BuildId = build.Id.ToString(),
                         DeviceName = x.DeviceName
                     }).ToList(),
                 }
@@ -100,10 +99,10 @@ namespace Bobi.Api.Application.Services
             var buildResult = await _buildRepository.GetByIdAsync(id);
             if (buildResult.IsSuccess)
             {
-                var deviceResult = await _deviceRepository.GetByFilterAsync(x => x.BuildId == id);
+                var deviceResult = await _deviceRepository.GetByFilterAsync(x => x.BuildId == id.ToString());
                 try
                 {
-                    var device = await _deviceRepository.DeleteManyAsync(x => x.BuildId == id);
+                    var device = await _deviceRepository.DeleteManyAsync(x => x.BuildId == id.ToString());
                     var build = await _buildRepository.DeleteAsync(id);
                 }
                 catch (Exception)
@@ -128,7 +127,7 @@ namespace Bobi.Api.Application.Services
                 return HandleError<BuildResponseModel>($"Build Id: {id} Not Found");
             }
 
-            var device = await _deviceRepository.GetListByFilterAsync(x => x.BuildId == id);
+            var device = await _deviceRepository.GetListByFilterAsync(x => x.BuildId == id.ToString());
 
             return new BaseReturnModel<BuildResponseModel>
             {
@@ -141,7 +140,7 @@ namespace Bobi.Api.Application.Services
                     Device = device.Data.Select(x => new DeviceResponseModel
                     {
                         Id = x.Id,
-                        BuildId = build.Data.Id,
+                        BuildId = build.Data.Id.ToString(),
                         DeviceName = x.DeviceName
                     }).ToList(),
                     NumberOfFloors = build.Data.NumberOfFloors,
@@ -195,7 +194,7 @@ namespace Bobi.Api.Application.Services
             }
 
             var selectedBuild = buildList.Data.First();
-            var device = await _deviceRepository.GetListByFilterAsync(x => x.BuildId == selectedBuild.Id);
+            var device = await _deviceRepository.GetListByFilterAsync(x => x.BuildId == selectedBuild.Id.ToString());
             return new BaseReturnModel<List<BuildResponseModel>>
             {
                 Data = buildList.Data.Select(x => new BuildResponseModel
@@ -220,7 +219,13 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var build = await _buildRepository.GetByIdAsync(item.Id);
+                // ObjectId'i int'e çevirelim, eğer çevrilemezse hata verelim
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<BuildResponseModel>("Invalid int format!");
+                }
+
+                var build = await _buildRepository.GetByIdAsync(idAsInt);
                 if (!build.IsSuccess)
                 {
                     return HandleError<BuildResponseModel>("Build update fault!");

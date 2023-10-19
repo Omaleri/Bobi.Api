@@ -128,7 +128,12 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var build = await _cityRepository.GetByIdAsync(item.Id);
+                // ObjectId'i int'e çevirelim, eğer çevrilemezse hata verelim
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<CityResponseModel>("Invalid int format!");
+                }
+                var build = await _cityRepository.GetByIdAsync(idAsInt);
                 if (!build.IsSuccess)
                 {
                     return HandleError<CityResponseModel>("City update fault!");

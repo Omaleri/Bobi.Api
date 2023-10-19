@@ -129,7 +129,11 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var report = await _numberRepository.GetByIdAsync(item.Id);
+                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
+                {
+                    return HandleError<NumberResponseModel>("Invalid int format!");
+                }
+                var report = await _numberRepository.GetByIdAsync(idAsInt);
                 if (!report.IsSuccess)
                 {
                     return HandleError<NumberResponseModel>("Number update fault!");
