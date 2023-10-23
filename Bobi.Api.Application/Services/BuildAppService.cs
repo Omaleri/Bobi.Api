@@ -134,12 +134,12 @@ namespace Bobi.Api.Application.Services
                 Data = new BuildResponseModel
                 {
 
-                    Id = build.Data.Id,
+                    Id = build.Data.Id.ToString(),
                     AddressId = build.Data.AddressId,
                     DateOfDestructive = build.Data.DateOfDestructive,
                     Device = device.Data.Select(x => new DeviceResponseModel
                     {
-                        Id = x.Id,
+                        Id = x.Id.ToString(),
                         BuildId = build.Data.Id.ToString(),
                         DeviceName = x.DeviceName
                     }).ToList(),
@@ -165,7 +165,7 @@ namespace Bobi.Api.Application.Services
 
             var filteredData = build.Data.Where(x => !x.IsDeleted).Select(x => new BuildResponseModel
             {
-                Id = x.Id,
+                Id = x.Id.ToString(),
                 AddressId = x.AddressId,
                 DateOfDestructive = x.DateOfDestructive,
                 NumberOfFloors = x.NumberOfFloors,
@@ -175,7 +175,7 @@ namespace Bobi.Api.Application.Services
                 {
                     BuildId = x.BuildId,
                     DeviceName = x.DeviceName,
-                    Id = x.Id,
+                    Id = x.Id.ToString(),
                 }).ToList(),
             }).ToList();
 
@@ -199,7 +199,7 @@ namespace Bobi.Api.Application.Services
             {
                 Data = buildList.Data.Select(x => new BuildResponseModel
                 {
-                    Id = x.Id,
+                    Id = x.Id.ToString(),
                     AddressId = x.AddressId,
                     DateOfDestructive = x.DateOfDestructive,
                     NumberOfFloors = x.NumberOfFloors,
@@ -209,7 +209,7 @@ namespace Bobi.Api.Application.Services
                     {
                         BuildId = x.BuildId,
                         DeviceName = x.DeviceName,
-                        Id = x.Id,
+                        Id = x.Id.ToString(),
                     }).ToList(),
                 }).ToList(),
             };
@@ -245,7 +245,7 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new BuildResponseModel
                     {
-                        Id = result.Data.Id,
+                        Id = result.Data.Id.ToString(),
                         AddressId = result.Data.AddressId,
                         DateOfDestructive = result.Data.DateOfDestructive,
                         Situation = result.Data.Situation,

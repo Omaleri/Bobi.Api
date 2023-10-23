@@ -83,7 +83,7 @@ namespace Bobi.Api.Application.Services
             {
                 Data = new DeviceResponseModel
                 {
-                    Id = result.Data.Id,
+                    Id = result.Data.Id.ToString(),
                     BuildId = result.Data.BuildId,
                     DeviceName = result.Data.DeviceName
                 }
@@ -100,7 +100,7 @@ namespace Bobi.Api.Application.Services
             }
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new DeviceResponseModel
             {
-                Id = x.Id,
+                Id = x.Id.ToString(),
                 BuildId = x.BuildId,
                 DeviceName = x.DeviceName
             }).ToList();
@@ -122,7 +122,7 @@ namespace Bobi.Api.Application.Services
             {
                 Data = result.Data.Select(x => new DeviceResponseModel
                 {
-                    Id = x.Id,
+                    Id = x.Id.ToString(),
                     BuildId = x.BuildId,
                     DeviceName = x.DeviceName
                 }).ToList(),
@@ -153,7 +153,7 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new DeviceResponseModel
                     {
-                        Id = result.Data.Id,
+                        Id = result.Data.Id.ToString(),
                         BuildId = result.Data.BuildId,
                         DeviceName = result.Data.DeviceName
                     }

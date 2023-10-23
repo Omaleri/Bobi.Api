@@ -11,7 +11,6 @@ namespace Bobi.Api.Application.Domain.Shared.Abstract
 {
     public abstract class BaseDtoModel
     {
-        [JsonIgnore]
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
     }
 }

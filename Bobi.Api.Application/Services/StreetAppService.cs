@@ -82,7 +82,7 @@ namespace Bobi.Api.Application.Services
             {
                 Data = new StreetResponseModel
                 {
-                    Id = result.Data.Id,
+                    Id = result.Data.Id.ToString(),
                     Name = result.Data.Name
                 }
             };
@@ -98,7 +98,7 @@ namespace Bobi.Api.Application.Services
             }
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new StreetResponseModel
             {
-                Id = x.Id,
+                Id = x.Id.ToString(),
                 Name = x.Name
             }).ToList();
 
@@ -119,7 +119,7 @@ namespace Bobi.Api.Application.Services
             {
                 Data = result.Data.Select(x => new StreetResponseModel
                 {
-                    Id = x.Id,
+                    Id = x.Id.ToString(),
                     Name = x.Name
                 }).ToList(),
             };
@@ -148,7 +148,7 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new StreetResponseModel
                     {
-                        Id = result.Data.Id,
+                        Id = result.Data.Id.ToString(),
                         Name = result.Data.Name
                     }
                 };

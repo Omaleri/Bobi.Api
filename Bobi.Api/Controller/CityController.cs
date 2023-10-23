@@ -1,10 +1,6 @@
 ﻿using Bobi.Api.Application.Contracts.DTO.RequestModel;
 using Bobi.Api.Application.Contracts.Interfaces;
-using Bobi.Api.Application.Services;
-using Bobi.Api.Domain.Address;
-using Bobi.Api.Domain.Build;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace Bobi.Api.Controller
 {

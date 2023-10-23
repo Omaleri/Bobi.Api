@@ -11,7 +11,6 @@ namespace Bobi.Api.Application.Contracts.Interfaces
 {
     public abstract class BaseEntity
     {
-        [JsonIgnore]
         public ObjectId Id { get; set; }
 
         public int CreatedUserId { get; set; }
