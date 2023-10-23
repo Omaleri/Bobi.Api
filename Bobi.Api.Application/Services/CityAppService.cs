@@ -49,7 +49,8 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new CityResponseModel
                     {
-                        Name = result.Data.Name
+                        Name = result.Data.Name,
+                        Id = result.Data.Id.ToString()
                     }
                 };
             }

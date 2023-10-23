@@ -16,8 +16,10 @@ namespace Bobi.Api.MongoDb.Repositories.Base
         private readonly IMongoCollection<T> _collection;
         public Repository(IConfiguration configuration)
         {
-            var client = new MongoClient(configuration.GetSection("MongoDB:ConnectionString").Value);
-            var database = client.GetDatabase(configuration.GetSection("MongoDB:DatabaseName").Value);
+            var connString = configuration.GetSection("MongoDB:ConnectionString").Value;
+            var dbName = configuration.GetSection("MongoDB:DatabaseName").Value;
+            var client = new MongoClient(connString);
+            var database = client.GetDatabase(dbName);
             _collection = database.GetCollection<T>(nameof(T));
         }
         private readonly ILogger<T> _logger;
@@ -39,11 +41,6 @@ namespace Bobi.Api.MongoDb.Repositories.Base
         {
             try
             {
-                await _collection.InsertOneAsync(item);
-                if (_collection == null)
-                {
-                    return HandleError<T>("Create fault!");
-                }
                 item.CreationTime = DateTime.UtcNow;
                 item.IsDeleted = false;
                 item.IsActive = true;
@@ -51,6 +48,11 @@ namespace Bobi.Api.MongoDb.Repositories.Base
                 item.IsActive = true;
                 item.LastUpdatedUserId = 0;
                 item.LastModificationTime = DateTime.UtcNow;
+                await _collection.InsertOneAsync(item);
+                if (_collection == null)
+                {
+                    return HandleError<T>("Create fault!");
+                }
                 return new BaseReturnModel<T>
                 {
                     Data = item,
