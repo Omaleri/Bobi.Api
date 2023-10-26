@@ -30,7 +30,7 @@ namespace Bobi.Api.Controller
 
         [HttpDelete]
         [Route("api/voice/{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(string id)
         {
             var result = await _voiceAppService.DeleteAsync(id);
             if (result.IsSuccess)
@@ -43,7 +43,7 @@ namespace Bobi.Api.Controller
 
         [HttpGet]
         [Route("api/voice/{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(string id)
         {
             var result = await _voiceAppService.GetByIdAsync(id);
             if (result.IsSuccess)

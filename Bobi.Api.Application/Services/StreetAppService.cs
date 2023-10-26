@@ -60,7 +60,7 @@ namespace Bobi.Api.Application.Services
             }
         }
 
-        public async Task<BaseReturnModel<bool>> DeleteAsync(int id)
+        public async Task<BaseReturnModel<bool>> DeleteAsync(string id)
         {
             var result = await _streetRepository.DeleteAsync(id);
             if (!result.IsSuccess)
@@ -71,7 +71,7 @@ namespace Bobi.Api.Application.Services
             return new BaseReturnModel<bool> { Data = true };
         }
 
-        public async Task<BaseReturnModel<StreetResponseModel>> GetByIdAsync(int id)
+        public async Task<BaseReturnModel<StreetResponseModel>> GetByIdAsync(string id)
         {
             var result = await _streetRepository.GetByIdAsync(id);
             if (!result.IsSuccess)
@@ -129,11 +129,7 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
-                {
-                    return HandleError<StreetResponseModel>("Invalid int format!");
-                }
-                var report = await _streetRepository.GetByIdAsync(idAsInt);
+                var report = await _streetRepository.GetByIdAsync(item.Id);
                 if (!report.IsSuccess)
                 {
                     return HandleError<StreetResponseModel>("Street update fault!");

@@ -10,12 +10,12 @@ namespace Bobi.Api.Application.Contracts.DTO.ResponseModel
 {
     public class BuildResponseModel : BaseDtoModel
     {
-        public int AddressId { get; set; }
+        public string AddressId { get; set; }
         public bool Situation { get; set; }
         public int NumberOfFloors { get; set; }
         public string TypeOfFeature { get; set; }
         public DateTime DateOfDestructive { get; set; }
 
-        public List<DeviceResponseModel> Device { get; set; }
+        //public List<DeviceResponseModel> Device { get; set; }
     }
 }

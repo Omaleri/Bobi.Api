@@ -62,7 +62,7 @@ namespace Bobi.Api.Application.Services
             }
         }
 
-        public async Task<BaseReturnModel<bool>> DeleteAsync(int id)
+        public async Task<BaseReturnModel<bool>> DeleteAsync(string id)
         {
             var result = await _userRepository.DeleteAsync(id);
             if (!result.IsSuccess)
@@ -73,7 +73,7 @@ namespace Bobi.Api.Application.Services
             return new BaseReturnModel<bool> { Data = true };
         }
 
-        public async Task<BaseReturnModel<UserResponseModel>> GetByIdAsync(int id)
+        public async Task<BaseReturnModel<UserResponseModel>> GetByIdAsync(string id)
         {
             var result = await _userRepository.GetByIdAsync(id);
             if (!result.IsSuccess)
@@ -95,11 +95,7 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
-                {
-                    return HandleError<UserResponseModel>("Invalid int format!");
-                }
-                var user = await _userRepository.GetByIdAsync(idAsInt);
+                var user = await _userRepository.GetByIdAsync(item.Id);
                 if (!user.IsSuccess)
                 {
                     return HandleError<UserResponseModel>("User update fault!");

@@ -103,11 +103,12 @@ namespace Bobi.Api.MongoDb.Repositories.Base
             }
         }
 
-        public async Task<BaseReturnModel<bool>> DeleteAsync(int id)
+        public async Task<BaseReturnModel<bool>> DeleteAsync(string id)
         {
             try
             {
-                var filter = Builders<T>.Filter.Eq("_id", id);
+                var objectId = ObjectId.Parse(id);
+                var filter = Builders<T>.Filter.Eq("_id", objectId);
                 var result = await _collection.DeleteOneAsync(filter);
 
                 if (result.DeletedCount == 1)
@@ -225,11 +226,12 @@ namespace Bobi.Api.MongoDb.Repositories.Base
             }
         }
 
-        public async Task<BaseReturnModel<T>> GetByIdAsync(int id)
+        public async Task<BaseReturnModel<T>> GetByIdAsync(string id)
         {
             try
             {
-                var filter = Builders<T>.Filter.Eq("_id", id);
+                var objectId = ObjectId.Parse(id);
+                var filter = Builders<T>.Filter.Eq("_id", objectId);
                 var result = await _collection.Find(filter).FirstOrDefaultAsync();
 
                 if (result != null)

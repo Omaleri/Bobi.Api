@@ -1,6 +1,7 @@
 ﻿using Bobi.Api.Application.Contracts.DTO.RequestModel;
 using Bobi.Api.Application.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace Bobi.Api.Controller
 {
@@ -30,7 +31,7 @@ namespace Bobi.Api.Controller
 
         [HttpDelete]
         [Route("api/city/{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(string id)
         {
             var result = await _cityAppService.DeleteAsync(id);
             if (result.IsSuccess)
@@ -43,7 +44,7 @@ namespace Bobi.Api.Controller
 
         [HttpGet]
         [Route("api/city/{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(string id)
         {
             var result = await _cityAppService.GetByIdAsync(id);
             if (result.IsSuccess)

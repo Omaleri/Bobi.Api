@@ -14,8 +14,8 @@ namespace Bobi.Api.Application.Contracts.Interfaces
     public interface IUserAppService
     {
         Task<BaseReturnModel<UserResponseModel>> CreateAsync(UserRequestModel item);
-        Task<BaseReturnModel<UserResponseModel>> GetByIdAsync(int id);
+        Task<BaseReturnModel<UserResponseModel>> GetByIdAsync(string id);
         Task<BaseReturnModel<UserResponseModel>> UpdateAsync(UserRequestModel item);
-        Task<BaseReturnModel<bool>> DeleteAsync(int id);
+        Task<BaseReturnModel<bool>> DeleteAsync(string id);
     }
 }

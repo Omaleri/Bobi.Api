@@ -32,7 +32,7 @@ namespace Bobi.Api.Controller
 
         [HttpDelete]
         [Route("api/province/{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(string id)
         {
             var result = await _provinceAppService.DeleteAsync(id);
             if (result.IsSuccess)
@@ -45,7 +45,7 @@ namespace Bobi.Api.Controller
 
         [HttpGet]
         [Route("api/province/{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(string id)
         {
             var result = await _provinceAppService.GetByIdAsync(id);
             if (result.IsSuccess)

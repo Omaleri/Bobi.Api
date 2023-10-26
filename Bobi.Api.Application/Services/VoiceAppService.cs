@@ -67,7 +67,7 @@ namespace Bobi.Api.Application.Services
             }
         }
 
-        public async Task<BaseReturnModel<bool>> DeleteAsync(int id)
+        public async Task<BaseReturnModel<bool>> DeleteAsync(string id)
         {
             var result = await _voiceRepository.DeleteAsync(id);
             if (!result.IsSuccess)
@@ -78,7 +78,7 @@ namespace Bobi.Api.Application.Services
             return new BaseReturnModel<bool> { Data = true };
         }
 
-        public async Task<BaseReturnModel<VoiceResponseModel>> GetByIdAsync(int id)
+        public async Task<BaseReturnModel<VoiceResponseModel>> GetByIdAsync(string id)
         {
             var result = await _voiceRepository.GetByIdAsync(id);
             if (!result.IsSuccess)
@@ -142,11 +142,7 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
-                {
-                    return HandleError<VoiceResponseModel>("Invalid int format!");
-                }
-                var voice = await _voiceRepository.GetByIdAsync(idAsInt);
+                var voice = await _voiceRepository.GetByIdAsync(item.Id);
                 if (!voice.IsSuccess)
                 {
                     return HandleError<VoiceResponseModel>("Voice update fault!");

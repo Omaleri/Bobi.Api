@@ -15,9 +15,9 @@ namespace Bobi.Api.Application.Contracts.Interfaces
     {
         Task<BaseReturnModel<AddressResponseModel>> CreateAsync(AddressRequestModel item);
         Task<BaseReturnModel<List<AddressResponseModel>>> GetListByFilterAsync(Expression<Func<Address, bool>> exp);
-        Task<BaseReturnModel<AddressResponseModel>> GetByIdAsync(int id);
+        Task<BaseReturnModel<AddressResponseModel>> GetByIdAsync(string id);
         Task<BaseReturnModel<AddressResponseModel>> UpdateAsync(AddressRequestModel item);
-        Task<BaseReturnModel<bool>> DeleteAsync(int id);
+        Task<BaseReturnModel<bool>> DeleteAsync(string id);
         Task<BaseReturnModel<List<AddressResponseModel>>> GetListAsync();
 
     }

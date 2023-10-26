@@ -55,7 +55,7 @@ namespace Bobi.Api.Application.Services
 
             #endregion
 
-            #region Create Device
+           /* #region Create Device
             var deviceList = new List<Device>();
             foreach (var deviceItem in item.Device)
             {
@@ -74,7 +74,7 @@ namespace Bobi.Api.Application.Services
                     return HandleError<BuildResponseModel>("Create device fault!");
                 }
             }
-            #endregion        
+            #endregion */
             
             return new BaseReturnModel<BuildResponseModel>
             {
@@ -85,16 +85,16 @@ namespace Bobi.Api.Application.Services
                     NumberOfFloors = item.NumberOfFloors,
                     Situation = item.Situation,
                     TypeOfFeature = item.TypeOfFeature,
-                    Device = deviceList.Select(x => new DeviceResponseModel
+                   /* Device = deviceList.Select(x => new DeviceResponseModel
                     {
                         BuildId = build.Id.ToString(),
                         DeviceName = x.DeviceName
-                    }).ToList(),
+                    }).ToList(), */
                 }
             };
         }
 
-        public async Task<BaseReturnModel<bool>> DeleteAsync(int id)
+        public async Task<BaseReturnModel<bool>> DeleteAsync(string id)
         {
             var buildResult = await _buildRepository.GetByIdAsync(id);
             if (buildResult.IsSuccess)
@@ -118,7 +118,7 @@ namespace Bobi.Api.Application.Services
             return new BaseReturnModel<bool> { Data = true };
         }
 
-        public async Task<BaseReturnModel<BuildResponseModel>> GetByIdAsync(int id)
+        public async Task<BaseReturnModel<BuildResponseModel>> GetByIdAsync(string id)
         {
             var build = await _buildRepository.GetByIdAsync(id);
 
@@ -137,12 +137,12 @@ namespace Bobi.Api.Application.Services
                     Id = build.Data.Id.ToString(),
                     AddressId = build.Data.AddressId,
                     DateOfDestructive = build.Data.DateOfDestructive,
-                    Device = device.Data.Select(x => new DeviceResponseModel
+                  /*  Device = device.Data.Select(x => new DeviceResponseModel
                     {
                         Id = x.Id.ToString(),
                         BuildId = build.Data.Id.ToString(),
                         DeviceName = x.DeviceName
-                    }).ToList(),
+                    }).ToList(), */
                     NumberOfFloors = build.Data.NumberOfFloors,
                     Situation = build.Data.Situation,
                     TypeOfFeature = build.Data.TypeOfFeature
@@ -171,12 +171,12 @@ namespace Bobi.Api.Application.Services
                 NumberOfFloors = x.NumberOfFloors,
                 Situation = x.Situation,
                 TypeOfFeature = x.TypeOfFeature,
-                Device = device.Data.Select(x => new DeviceResponseModel
+              /*  Device = device.Data.Select(x => new DeviceResponseModel
                 {
                     BuildId = x.BuildId,
                     DeviceName = x.DeviceName,
                     Id = x.Id.ToString(),
-                }).ToList(),
+                }).ToList(), */
             }).ToList();
 
             return new BaseReturnModel<List<BuildResponseModel>>
@@ -205,12 +205,12 @@ namespace Bobi.Api.Application.Services
                     NumberOfFloors = x.NumberOfFloors,
                     Situation = x.Situation,
                     TypeOfFeature = x.TypeOfFeature,
-                    Device = device.Data.Select(x => new DeviceResponseModel
+                  /*  Device = device.Data.Select(x => new DeviceResponseModel
                     {
                         BuildId = x.BuildId,
                         DeviceName = x.DeviceName,
                         Id = x.Id.ToString(),
-                    }).ToList(),
+                    }).ToList(),*/
                 }).ToList(),
             };
         }
@@ -219,13 +219,7 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                // ObjectId'i int'e çevirelim, eğer çevrilemezse hata verelim
-                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
-                {
-                    return HandleError<BuildResponseModel>("Invalid int format!");
-                }
-
-                var build = await _buildRepository.GetByIdAsync(idAsInt);
+                var build = await _buildRepository.GetByIdAsync(item.Id);
                 if (!build.IsSuccess)
                 {
                     return HandleError<BuildResponseModel>("Build update fault!");

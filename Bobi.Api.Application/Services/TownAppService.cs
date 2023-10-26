@@ -60,7 +60,7 @@ namespace Bobi.Api.Application.Services
             }
         }
 
-        public async Task<BaseReturnModel<bool>> DeleteAsync(int id)
+        public async Task<BaseReturnModel<bool>> DeleteAsync(string id)
         {
             var result = await _townRepository.DeleteAsync(id);
             if (!result.IsSuccess)
@@ -71,7 +71,7 @@ namespace Bobi.Api.Application.Services
             return new BaseReturnModel<bool> { Data = true };
         }
 
-        public async Task<BaseReturnModel<TownResponseModel>> GetByIdAsync(int id)
+        public async Task<BaseReturnModel<TownResponseModel>> GetByIdAsync(string id)
         {
             var result = await _townRepository.GetByIdAsync(id);
             if (!result.IsSuccess)
@@ -125,11 +125,7 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
-                {
-                    return HandleError<TownResponseModel>("Invalid int format!");
-                }
-                var report = await _townRepository.GetByIdAsync(idAsInt);
+                var report = await _townRepository.GetByIdAsync(item.Id);
                 if (!report.IsSuccess)
                 {
                     return HandleError<TownResponseModel>("Town update fault!");

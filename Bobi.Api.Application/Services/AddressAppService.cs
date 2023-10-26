@@ -62,7 +62,7 @@ namespace Bobi.Api.Application.Services
 
             #region Get City
             ObjectId cityObjectId;
-            if (!ObjectId.TryParse(item.StreetId.ToString(), out cityObjectId))
+            if (!ObjectId.TryParse(item.CityId.ToString(), out cityObjectId))
             {
                 return HandleError<AddressResponseModel>("Invalid StreetId format!");
             }
@@ -75,7 +75,7 @@ namespace Bobi.Api.Application.Services
 
             #region Get Number
             ObjectId numberObjectId;
-            if (!ObjectId.TryParse(item.StreetId.ToString(), out numberObjectId))
+            if (!ObjectId.TryParse(item.NumberId.ToString(), out numberObjectId))
             {
                 return HandleError<AddressResponseModel>("Invalid StreetId format!");
             }
@@ -88,7 +88,7 @@ namespace Bobi.Api.Application.Services
 
             #region Get Province
             ObjectId provinceObjectId;
-            if (!ObjectId.TryParse(item.StreetId.ToString(), out provinceObjectId))
+            if (!ObjectId.TryParse(item.ProvinceId.ToString(), out provinceObjectId))
             {
                 return HandleError<AddressResponseModel>("Invalid StreetId format!");
             }
@@ -101,7 +101,7 @@ namespace Bobi.Api.Application.Services
 
             #region Get Town
             ObjectId townObjectId;
-            if (!ObjectId.TryParse(item.StreetId.ToString(), out townObjectId))
+            if (!ObjectId.TryParse(item.TownId.ToString(), out townObjectId))
             {
                 return HandleError<AddressResponseModel>("Invalid StreetId format!");
             }
@@ -112,21 +112,43 @@ namespace Bobi.Api.Application.Services
             }
             #endregion
 
-            return new BaseReturnModel<AddressResponseModel>
+            try
             {
-                Data = new AddressResponseModel
+                var address = new Address
                 {
-                    CityId = cityObjectId.ToString(),
-                    NumberId = numberObjectId.ToString(),
-                    ProvinceId = provinceObjectId.ToString(),
-                    StreetId = streetObjectId.ToString(),
-                    TownId = townObjectId.ToString(),
-                    OpenAddress = item.OpenAddress
+                    CityId = item.CityId,
+                    NumberId = item.NumberId,
+                    OpenAddress = item.OpenAddress,
+                    ProvinceId = item.ProvinceId,
+                    StreetId = item.StreetId,
+                    TownId = item.TownId
+                };
+                var result = await _addressRepository.CreateAsync(address);
+                if (!result.IsSuccess)
+                {
+                    return HandleError<AddressResponseModel>("City create fault!");
                 }
-            };
+                return new BaseReturnModel<AddressResponseModel>
+                {
+                    Data = new AddressResponseModel
+                    {
+                        CityId = city.Data.Name,
+                        NumberId = number.Data.Name,
+                        ProvinceId = province.Data.Name,
+                        StreetId = street.Data.Name,
+                        TownId = town.Data.Name,
+                        OpenAddress = item.OpenAddress,
+                        Id = item.Id,
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                return HandleError<AddressResponseModel>(ex.Message);
+            }
         }
 
-        public async Task<BaseReturnModel<bool>> DeleteAsync(int id)
+        public async Task<BaseReturnModel<bool>> DeleteAsync(string id)
         {
             var addressResult = await _addressRepository.DeleteAsync(id);
             if (!addressResult.IsSuccess)
@@ -137,7 +159,7 @@ namespace Bobi.Api.Application.Services
             return new BaseReturnModel<bool> { Data = true };
         }
 
-        public async Task<BaseReturnModel<AddressResponseModel>> GetByIdAsync(int id)
+        public async Task<BaseReturnModel<AddressResponseModel>> GetByIdAsync(string id)
         {
             var address = await _addressRepository.GetByIdAsync(id);
             if (!address.IsSuccess)
@@ -212,12 +234,8 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                // ObjectId'i int'e çevirelim, eğer çevrilemezse hata verelim
-                if (!int.TryParse(item.Id.ToString(), out int idAsInt))
-                {
-                    return HandleError<AddressResponseModel>("Invalid int format!");
-                }
-                var address = await _addressRepository.GetByIdAsync(idAsInt);
+                
+                var address = await _addressRepository.GetByIdAsync(item.Id);
                 if (!address.IsSuccess)
                 {
                     return HandleError<AddressResponseModel>("Adrress update fault!");
