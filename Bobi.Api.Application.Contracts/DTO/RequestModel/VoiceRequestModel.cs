@@ -12,6 +12,6 @@ namespace Bobi.Api.Application.Contracts.DTO.RequestModel
         public DateTime VoiceDate { get; set; }
         public DateTime VoiceTime { get; set; }
         public string Link { get; set; }
-        public int BuildId { get; set; }
+        public string BuildId { get; set; }
     }
 }

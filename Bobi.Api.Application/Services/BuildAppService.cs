@@ -99,21 +99,21 @@ namespace Bobi.Api.Application.Services
             var buildResult = await _buildRepository.GetByIdAsync(id);
             if (buildResult.IsSuccess)
             {
-                var deviceResult = await _deviceRepository.GetByFilterAsync(x => x.BuildId == id.ToString());
+                //var deviceResult = await _deviceRepository.GetByFilterAsync(x => x.BuildId == id.ToString());
                 try
                 {
-                    var device = await _deviceRepository.DeleteManyAsync(x => x.BuildId == id.ToString());
+                    //var device = await _deviceRepository.DeleteManyAsync(x => x.BuildId == id.ToString());
                     var build = await _buildRepository.DeleteAsync(id);
                 }
                 catch (Exception)
                 {
-                    _logger.LogError("Error while deleting coin", buildResult);
+                    _logger.LogError("Error while deleting Build", buildResult);
                 }
             }
 
             else
             {
-                return HandleError<bool>("Delete device fault!");
+                return HandleError<bool>("Delete build fault!");
             }
             return new BaseReturnModel<bool> { Data = true };
         }
