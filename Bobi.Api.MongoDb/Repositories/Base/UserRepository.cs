@@ -1,18 +1,18 @@
-﻿using System;
-using Bobi.Api.Domain.Address;
+﻿using Bobi.Api.Domain.User;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace Bobi.Api.MongoDb.Repositories.Base
 {
-    public class AddressRepository : Repository<Address>
+    public class UserRepository : Repository<User>
     {
         private readonly IConfiguration _configuration;
 
-        public AddressRepository(IConfiguration configuration) : base(configuration)
+        public UserRepository(IConfiguration configuration) : base(configuration)
         {
             _configuration = configuration;
         }

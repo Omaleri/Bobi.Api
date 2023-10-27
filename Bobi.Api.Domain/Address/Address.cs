@@ -3,8 +3,6 @@ using MongoDB.Bson;
 
 namespace Bobi.Api.Domain.Address
 {
-    [BsonCollection("productCollection")]
-
     public class Address : BaseEntity
     {
         public string CityId { get; set; }
