@@ -23,7 +23,6 @@ namespace Bobi.Api.MongoDb.Repositories.Base
             _collection = database.GetCollection<T>(nameof(T));
         }
         private readonly ILogger<T> _logger;
-        private readonly Role _role;
 
         private BaseReturnModel<T> HandleError<T>(string errorMessage)
         {

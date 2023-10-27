@@ -39,7 +39,7 @@ namespace Bobi.Api.Application.Services
                 {
                     Email = item.Email,
                     Password = item.Password,
-                    RoleId = item.RoleId
+                    isAdmin = item.isAdmin
                 };
                 var result = await _userRepository.CreateAsync(user);
                 if (!result.IsSuccess)
@@ -52,7 +52,7 @@ namespace Bobi.Api.Application.Services
                     {
                         Email = item.Email,
                         Password = item.Password,
-                        RoleId = item.RoleId
+                        isAdmin = item.isAdmin
                     }
                 };
             }
@@ -86,7 +86,7 @@ namespace Bobi.Api.Application.Services
                 {
                     Email = result.Data.Email,
                     Password = result.Data.Password,
-                    RoleId = result.Data.RoleId
+                    isAdmin = result.Data.isAdmin
                 }
             };
         }
@@ -100,7 +100,7 @@ namespace Bobi.Api.Application.Services
                 {
                     return HandleError<UserResponseModel>("User update fault!");
                 }
-                user.Data.RoleId = item.RoleId;
+                user.Data.isAdmin = item.isAdmin;
                 user.Data.Email = item.Email;
                 user.Data.Password = item.Password;
                 var result = await _userRepository.UpdateAsync(user.Data);
@@ -114,7 +114,7 @@ namespace Bobi.Api.Application.Services
                     {
                         Email = result.Data.Email,
                         Password = result.Data.Password,
-                        RoleId = result.Data.RoleId
+                        isAdmin = result.Data.isAdmin
                     }
                 };
             }

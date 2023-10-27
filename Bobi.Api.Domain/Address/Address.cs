@@ -1,12 +1,10 @@
 ﻿using Bobi.Api.Application.Contracts.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace Bobi.Api.Domain.Address
 {
+    [BsonCollection("productCollection")]
+
     public class Address : BaseEntity
     {
         public string CityId { get; set; }

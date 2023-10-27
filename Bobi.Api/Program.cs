@@ -24,7 +24,6 @@ builder.Services.AddScoped<IStreetAppService, StreetAppService>();
 builder.Services.AddScoped<ITownAppService, TownAppService>();
 builder.Services.AddScoped<IUserAppService, UserAppService>();
 builder.Services.AddScoped<IVoiceAppService, VoiceAppService>();
-builder.Services.AddScoped<IRoleAppService, RoleAppService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();

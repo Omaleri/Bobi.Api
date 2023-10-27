@@ -11,6 +11,6 @@ namespace Bobi.Api.Application.Contracts.DTO.RequestModel
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public int RoleId { get; set; }
+        public bool isAdmin { get; set; }
     }
 }
