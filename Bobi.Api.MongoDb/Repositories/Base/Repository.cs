@@ -11,10 +11,10 @@ using System.Linq.Expressions;
 
 namespace Bobi.Api.MongoDb.Repositories.Base
 {
-    public abstract class Repository<T> : IRepository<T> where T : BaseEntity
+    public abstract class IRepository<T> : Interfaces.IRepository<T> where T : BaseEntity
     {
         private readonly IMongoCollection<T> _collection;
-        public Repository(IConfiguration configuration)
+        public IRepository(IConfiguration configuration)
         {
             var collectionName = (nameof(T));
             var connString = configuration.GetSection("MongoDB:ConnectionString").Value;

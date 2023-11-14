@@ -2,6 +2,7 @@
 using Bobi.Api.Application.Contracts.DTO.ResponseModel;
 using Bobi.Api.Application.Contracts.Interfaces;
 using Bobi.Api.Application.Domain.Shared.Abstract;
+using Bobi.Api.Domain.Address;
 using Bobi.Api.Domain.Build;
 using Bobi.Api.MongoDb.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -16,12 +17,25 @@ namespace Bobi.Api.Application.Services
         private readonly ILogger<BuildAppService> _logger;
         private readonly IRepository<Build> _buildRepository;
         private readonly IRepository<Device> _deviceRepository;
+        private readonly IRepository<Address> _addressRepository;
+        private readonly IRepository<City> _cityRepository;
+        private readonly IRepository<Province> _provinceRepository;
+        private readonly IRepository<Number> _numberRepository;
+        private readonly IRepository<Street> _streetRepository;
+        private readonly IRepository<Town> _townRepository;
 
-        public BuildAppService(ILogger<BuildAppService> logger, IRepository<Build> buildRepository, IRepository<Device> deviceRepository)
+
+        public BuildAppService(ILogger<BuildAppService> logger, IRepository<Build> buildRepository, IRepository<Device> deviceRepository, IRepository<Address> addressRepository, IRepository<City> cityRepository, IRepository<Province> provinceRepository, IRepository<Number> numberRepository, IRepository<Street> streetRepository, IRepository<Town> townRepository)
         {
             _logger = logger;
             _buildRepository = buildRepository;
             _deviceRepository = deviceRepository;
+            _addressRepository = addressRepository;
+            _cityRepository = cityRepository;
+            _provinceRepository = provinceRepository;
+            _numberRepository = numberRepository;
+            _streetRepository = streetRepository;
+            _townRepository = townRepository;
         }
 
         private BaseReturnModel<T> HandleError<T>(string errorMessage)
@@ -38,6 +52,7 @@ namespace Bobi.Api.Application.Services
 
         public async Task<BaseReturnModel<BuildResponseModel>> CreateAsync(BuildRequestModel item)
         {
+
             #region Create Build
             var build = new Build
             {

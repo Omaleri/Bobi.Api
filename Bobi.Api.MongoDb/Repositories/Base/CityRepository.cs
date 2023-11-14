@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Bobi.Api.MongoDb.Repositories.Base
 {
-    public class CityRepository : IRepository<City>
+    public class CityRepository : Interfaces.IRepository<City>
     {
         private readonly IMongoCollection<City> _collection;
 

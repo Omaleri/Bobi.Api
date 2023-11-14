@@ -18,26 +18,26 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddScoped<IAddressAppService, AddressAppService>();
-builder.Services.AddScoped<IRepository<Address>, AddressRepository>();
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Address>, AddressRepository>();
 builder.Services.AddScoped<IBuildAppService, BuildAppService>();
-builder.Services.AddScoped<IRepository<Build>, BuildRepository>();
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Build>, BuildRepository>();
 builder.Services.AddScoped<ICityAppService, CityAppService>();
-builder.Services.AddScoped<IRepository<City>, CityRepository>();
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<City>, CityRepository>();
 builder.Services.AddScoped<IDeviceAppService, DeviceAppService>();
-builder.Services.AddScoped<IRepository<Device>, DeviceRepository>();
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Device>, DeviceRepository>();
 builder.Services.AddScoped<INumberAppService, NumberAppService>();
-builder.Services.AddScoped<IRepository<Number>, NumberRepository>();
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Number>, NumberRepository>();
 builder.Services.AddScoped<IProvinceAppService, ProvinceAppService>();
-builder.Services.AddScoped<IRepository<Province>, ProvinceRepository>();
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Province>, ProvinceRepository>();
 builder.Services.AddScoped<IStreetAppService, StreetAppService>();
-builder.Services.AddScoped<IRepository<Street>, StreetRepository>();
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Street>, StreetRepository>();
 builder.Services.AddScoped<ITownAppService, TownAppService>();
-builder.Services.AddScoped<IRepository<Town>, TownRepository>();
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Town>, TownRepository>();
 builder.Services.AddScoped<IUserAppService, UserAppService>();
-builder.Services.AddScoped<IRepository<User>, UserRepository>();
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<User>, UserRepository>();
 builder.Services.AddScoped<IVoiceAppService, VoiceAppService>();
-builder.Services.AddScoped<IRepository<Voice>, VoiceRepository>();
-
+builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Voice>, VoiceRepository>();
+//builder.Services.AddScoped(typeof(Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<>), typeof(Bobi.Api.MongoDb.Repositories.Base.IRepository<>));
 
 var app = builder.Build();
 
