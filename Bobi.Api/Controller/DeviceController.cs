@@ -6,6 +6,8 @@ using System.Linq.Expressions;
 
 namespace Bobi.Api.Controller
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class DeviceController : ControllerBase
     {
         private readonly ILogger<DeviceController> _logger;
@@ -31,7 +33,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpDelete]
-        [Route("api/device/{id}")]
+        [Route("DeleteAsync/{id}")]
         public async Task<IActionResult> DeleteAsync(string id)
         {
             var result = await _deviceAppService.DeleteAsync(id);
@@ -44,7 +46,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpGet]
-        [Route("api/device/{id}")]
+        [Route("GetByIdAsync/{id}")]
         public async Task<IActionResult> GetByIdAsync(string id)
         {
             var result = await _deviceAppService.GetByIdAsync(id);
@@ -57,7 +59,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpPut]
-        [Route("api/device/")]
+        [Route("UpdateAsync")]
         public async Task<IActionResult> UpdateAsync(DeviceRequestModel requestModel)
         {
             var result = await _deviceAppService.UpdateAsync(requestModel);
@@ -69,8 +71,7 @@ namespace Bobi.Api.Controller
             return StatusCode(result.Error[0].Code, result.Error);
         }
 
-        [HttpGet]
-        [Route("api/device/")]
+        [HttpGet("GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _deviceAppService.GetListAsync();

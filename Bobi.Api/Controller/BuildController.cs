@@ -1,12 +1,11 @@
 ﻿using Bobi.Api.Application.Contracts.DTO.RequestModel;
 using Bobi.Api.Application.Contracts.Interfaces;
-using Bobi.Api.Domain.Address;
-using Bobi.Api.Domain.Build;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace Bobi.Api.Controller
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class BuildController : ControllerBase
     {
         private readonly ILogger<BuildController> _logger;
@@ -70,8 +69,7 @@ namespace Bobi.Api.Controller
             return StatusCode(result.Error[0].Code, result.Error);
         }
 
-        [HttpGet]
-        [Route("api/build/")]
+        [HttpGet("GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _buildAppService.GetListAsync();

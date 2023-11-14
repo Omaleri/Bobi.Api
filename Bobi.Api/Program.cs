@@ -16,6 +16,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+{
+    builder.AllowAnyOrigin().AllowAnyOrigin().AllowAnyHeader();
+}));
 
 builder.Services.AddScoped<IAddressAppService, AddressAppService>();
 builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Address>, AddressRepository>();
@@ -40,6 +44,9 @@ builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<
 //builder.Services.AddScoped(typeof(Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<>), typeof(Bobi.Api.MongoDb.Repositories.Base.IRepository<>));
 
 var app = builder.Build();
+
+app.UseCors("MyPolicy");
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
