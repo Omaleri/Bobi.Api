@@ -99,7 +99,6 @@ namespace Bobi.Api.MongoDb.Repositories.Base
             catch (Exception ex)
             {
                 return HandleError<List<T>>("Create many fault!");
-
             }
         }
 

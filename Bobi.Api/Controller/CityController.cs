@@ -42,8 +42,7 @@ namespace Bobi.Api.Controller
             return StatusCode(result.Error[0].Code, result.Error);
         }
 
-        [HttpGet]
-        [Route("api/city/{id}")]
+        [HttpGet("api/city/GetByIdAsync/{id}")]
         public async Task<IActionResult> GetByIdAsync(string id)
         {
             var result = await _cityAppService.GetByIdAsync(id);
@@ -69,7 +68,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpGet]
-        [Route("api/city/")]
+        [Route("api/city/GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _cityAppService.GetListAsync();

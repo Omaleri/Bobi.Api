@@ -71,7 +71,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpGet]
-        [Route("api/street/")]
+        [Route("api/street/GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _streetAppService.GetListAsync();

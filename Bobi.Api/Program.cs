@@ -18,11 +18,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
-    builder.AllowAnyOrigin().AllowAnyOrigin().AllowAnyHeader();
+    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 }));
 
-builder.Services.AddScoped<IAddressAppService, AddressAppService>();
-builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Address>, AddressRepository>();
 builder.Services.AddScoped<IBuildAppService, BuildAppService>();
 builder.Services.AddScoped<Bobi.Api.MongoDb.Repositories.Interfaces.IRepository<Build>, BuildRepository>();
 builder.Services.AddScoped<ICityAppService, CityAppService>();

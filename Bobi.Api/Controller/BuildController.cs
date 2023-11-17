@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bobi.Api.Controller
 {
-    [Route("api/[controller]")]
+    [Route("api/build")]
     [ApiController]
     public class BuildController : ControllerBase
     {
@@ -31,7 +31,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpDelete]
-        [Route("api/build/{id}")]
+        [Route("/delete/{id}")]
         public async Task<IActionResult> DeleteAsync(string id)
         {
             var result = await _buildAppService.DeleteAsync(id);

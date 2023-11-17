@@ -38,7 +38,6 @@ namespace Bobi.Api.Application.Services
             {
                 var device = new Device
                 {
-                    BuildId = item.BuildId,
                     DeviceName = item.DeviceName,
                 };
                 var result = await _deviceRepository.CreateAsync(device);
@@ -50,7 +49,6 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new DeviceResponseModel
                     {
-                        BuildId = result.Data.BuildId,
                         DeviceName = result.Data.DeviceName
                     }
                 };
@@ -84,7 +82,6 @@ namespace Bobi.Api.Application.Services
                 Data = new DeviceResponseModel
                 {
                     Id = result.Data.Id.ToString(),
-                    BuildId = result.Data.BuildId,
                     DeviceName = result.Data.DeviceName
                 }
             };
@@ -96,12 +93,10 @@ namespace Bobi.Api.Application.Services
             if (!result.IsSuccess)
             {
                 return HandleError<List<DeviceResponseModel>>("Device list get fault!");
-
             }
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new DeviceResponseModel
             {
                 Id = x.Id.ToString(),
-                BuildId = x.BuildId,
                 DeviceName = x.DeviceName
             }).ToList();
 
@@ -123,7 +118,6 @@ namespace Bobi.Api.Application.Services
                 Data = result.Data.Select(x => new DeviceResponseModel
                 {
                     Id = x.Id.ToString(),
-                    BuildId = x.BuildId,
                     DeviceName = x.DeviceName
                 }).ToList(),
             };
@@ -139,7 +133,6 @@ namespace Bobi.Api.Application.Services
                     return HandleError<DeviceResponseModel>("Device update fault!");
                 }
                 device.Data.DeviceName = item.DeviceName;
-                device.Data.BuildId = item.BuildId;
                 var result = await _deviceRepository.UpdateAsync(device.Data);
                 if (!result.IsSuccess)
                 {
@@ -150,7 +143,6 @@ namespace Bobi.Api.Application.Services
                     Data = new DeviceResponseModel
                     {
                         Id = result.Data.Id.ToString(),
-                        BuildId = result.Data.BuildId,
                         DeviceName = result.Data.DeviceName
                     }
                 };

@@ -96,6 +96,7 @@ namespace Bobi.Api.Application.Services
             }
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new TownResponseModel
             {
+                Id = x.Id.ToString(),
                 Name = x.Name
             }).ToList();
 

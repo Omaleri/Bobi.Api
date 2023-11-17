@@ -71,7 +71,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpGet]
-        [Route("api/number/")]
+        [Route("api/number/GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _numberAppService.GetListAsync();

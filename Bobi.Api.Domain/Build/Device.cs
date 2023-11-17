@@ -9,7 +9,6 @@ namespace Bobi.Api.Domain.Build
 {
     public class Device : BaseEntity
     {
-        public string BuildId { get; set; }
         public string DeviceName { get; set; }
     }
 }

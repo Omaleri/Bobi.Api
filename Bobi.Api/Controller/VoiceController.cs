@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bobi.Api.Controller
 {
+    [Route("api/voice")]
+    [ApiController]
     public class VoiceController : ControllerBase
     {
         private readonly ILogger<VoiceController> _logger;
@@ -67,8 +69,7 @@ namespace Bobi.Api.Controller
             return StatusCode(result.Error[0].Code, result.Error);
         }
 
-        [HttpGet]
-        [Route("api/voice/")]
+        [HttpGet("GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _voiceAppService.GetListAsync();

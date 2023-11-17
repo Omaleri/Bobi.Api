@@ -18,7 +18,6 @@ namespace Bobi.Api.Application.Services
         private readonly ILogger<BuildAppService> _logger;
         private readonly IRepository<Build> _buildRepository;
         private readonly IRepository<Device> _deviceRepository;
-        private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<City> _cityRepository;
         private readonly IRepository<Province> _provinceRepository;
         private readonly IRepository<Number> _numberRepository;
@@ -26,12 +25,11 @@ namespace Bobi.Api.Application.Services
         private readonly IRepository<Town> _townRepository;
 
 
-        public BuildAppService(ILogger<BuildAppService> logger, IRepository<Build> buildRepository, IRepository<Device> deviceRepository, IRepository<Address> addressRepository, IRepository<City> cityRepository, IRepository<Province> provinceRepository, IRepository<Number> numberRepository, IRepository<Street> streetRepository, IRepository<Town> townRepository)
+        public BuildAppService(ILogger<BuildAppService> logger, IRepository<Build> buildRepository, IRepository<Device> deviceRepository, IRepository<City> cityRepository, IRepository<Province> provinceRepository, IRepository<Number> numberRepository, IRepository<Street> streetRepository, IRepository<Town> townRepository)
         {
             _logger = logger;
             _buildRepository = buildRepository;
             _deviceRepository = deviceRepository;
-            _addressRepository = addressRepository;
             _cityRepository = cityRepository;
             _provinceRepository = provinceRepository;
             _numberRepository = numberRepository;
@@ -53,59 +51,63 @@ namespace Bobi.Api.Application.Services
 
         public async Task<BaseReturnModel<BuildResponseModel>> CreateAsync(BuildRequestModel item)
         {
+            #region Create Device
+            var deviceList = item.Device
+                .Where(deviceItem => deviceItem != null)
+                .Select(deviceItem => new Device
+                {
+                    DeviceName = deviceItem.DeviceName
+                })
+                .ToList();
+
+            var deviceResult = await _deviceRepository.CreateManyAsync(deviceList);
+            if (!deviceResult.IsSuccess)
+            {
+                return HandleError<BuildResponseModel>("Create device fault!");
+            }
+            #endregion
 
             #region Create Build
             var build = new Build
             {
-                AddressId = item.AddressId,
+                CityId = item.CityId,
+                ProvinceId = item.ProvinceId,
+                TownId = item.TownId,
+                StreetId = item.StreetId,
+                NumberId = item.NumberId,
                 DateOfDestructive = item.DateOfDestructive,
                 NumberOfFloors = item.NumberOfFloors,
                 Situation = item.Situation,
-                TypeOfFeature = item.TypeOfFeature
+                TypeOfFeature = item.TypeOfFeature,
+                Device = deviceList
             };
             var result = await _buildRepository.CreateAsync(build);
             if (!result.IsSuccess)
             {
                 return HandleError<BuildResponseModel>("City create fault!");
             }
-
             #endregion
 
-           /* #region Create Device
-            var deviceList = new List<Device>();
-            foreach (var deviceItem in item.Device)
-            {
-                if (deviceItem != null)
-                {
-                    var device = new Device
-                    {
-                        BuildId = deviceItem.BuildId.ToString(),
-                        DeviceName = deviceItem.DeviceName
-                    };
-                    deviceList.Add(device);
-                }
-                var deviceResult = await _deviceRepository.CreateManyAsync(deviceList);
-                if (!deviceResult.IsSuccess)
-                {
-                    return HandleError<BuildResponseModel>("Create device fault!");
-                }
-            }
-            #endregion */
-            
+           
+
             return new BaseReturnModel<BuildResponseModel>
             {
                 Data = new BuildResponseModel
                 {
-                    AddressId = item.AddressId,
+                    CityId = item.CityId,
+                    ProvinceId = item.ProvinceId,
+                    TownId = item.TownId,
+                    StreetId = item.StreetId,
+                    NumberId = item.NumberId,
                     DateOfDestructive = item.DateOfDestructive,
                     NumberOfFloors = item.NumberOfFloors,
                     Situation = item.Situation,
                     TypeOfFeature = item.TypeOfFeature,
-                   /* Device = deviceList.Select(x => new DeviceResponseModel
+                    Device = deviceList.Select(x => new DeviceResponseModel
                     {
-                        BuildId = build.Id.ToString(),
+                        Id = x.Id.ToString(),
                         DeviceName = x.DeviceName
-                    }).ToList(), */
+                    }).ToList()
                 }
             };
         }
@@ -143,7 +145,7 @@ namespace Bobi.Api.Application.Services
                 return HandleError<BuildResponseModel>($"Build Id: {id} Not Found");
             }
 
-            var device = await _deviceRepository.GetListByFilterAsync(x => x.BuildId == id.ToString());
+            var device = await _deviceRepository.GetListByFilterAsync(x => x.Id.ToString() == id);
 
             return new BaseReturnModel<BuildResponseModel>
             {
@@ -151,14 +153,18 @@ namespace Bobi.Api.Application.Services
                 {
 
                     Id = build.Data.Id.ToString(),
-                    AddressId = build.Data.AddressId,
+                    CityId = build.Data.CityId,
+                    ProvinceId = build.Data.ProvinceId,
+                    TownId = build.Data.TownId,
+                    StreetId = build.Data.StreetId,
+                    NumberId = build.Data.NumberId,
                     DateOfDestructive = build.Data.DateOfDestructive,
-                  /*  Device = device.Data.Select(x => new DeviceResponseModel
+                    Device = device.Data.Select(x => new DeviceResponseModel
                     {
+                        DeviceName = x.DeviceName,
                         Id = x.Id.ToString(),
-                        BuildId = build.Data.Id.ToString(),
-                        DeviceName = x.DeviceName
-                    }).ToList(), */
+
+                    }).ToList(),
                     NumberOfFloors = build.Data.NumberOfFloors,
                     Situation = build.Data.Situation,
                     TypeOfFeature = build.Data.TypeOfFeature
@@ -179,20 +185,27 @@ namespace Bobi.Api.Application.Services
                 return HandleError<List<BuildResponseModel>>("Device get list fault!");
             }
 
+            var buildDevice = build.Data.Any();
+
             var filteredData = build.Data.Where(x => !x.IsDeleted).Select(x => new BuildResponseModel
             {
                 Id = x.Id.ToString(),
-                AddressId = x.AddressId,
+                CityId = x.CityId,
+                ProvinceId = x.ProvinceId,
+                TownId = x.TownId,
+                StreetId = x.StreetId,
+                NumberId = x.NumberId,
                 DateOfDestructive = x.DateOfDestructive,
                 NumberOfFloors = x.NumberOfFloors,
                 Situation = x.Situation,
                 TypeOfFeature = x.TypeOfFeature,
-              /*  Device = device.Data.Select(x => new DeviceResponseModel
-                {
-                    BuildId = x.BuildId,
-                    DeviceName = x.DeviceName,
-                    Id = x.Id.ToString(),
-                }).ToList(), */
+                Device = device.Data
+            .Join(x.Device, deviceFromList => deviceFromList.Id, buildDevice => buildDevice.Id, (deviceFromList, buildDevice) => new DeviceResponseModel
+            {
+                DeviceName = deviceFromList.DeviceName,
+                Id = deviceFromList.Id.ToString()
+            })
+            .ToList(),
             }).ToList();
             return new BaseReturnModel<List<BuildResponseModel>>
             {
@@ -209,23 +222,26 @@ namespace Bobi.Api.Application.Services
             }
 
             var selectedBuild = buildList.Data.First();
-            var device = await _deviceRepository.GetListByFilterAsync(x => x.BuildId == selectedBuild.Id.ToString());
+            var device = await _deviceRepository.GetListByFilterAsync(x => selectedBuild.Id == x.Id);
             return new BaseReturnModel<List<BuildResponseModel>>
             {
                 Data = buildList.Data.Select(x => new BuildResponseModel
                 {
                     Id = x.Id.ToString(),
-                    AddressId = x.AddressId,
+                    CityId = x.CityId,
+                    ProvinceId = x.ProvinceId,
+                    TownId = x.TownId,
+                    StreetId = x.StreetId,
+                    NumberId = x.NumberId,
                     DateOfDestructive = x.DateOfDestructive,
                     NumberOfFloors = x.NumberOfFloors,
                     Situation = x.Situation,
                     TypeOfFeature = x.TypeOfFeature,
-                  /*  Device = device.Data.Select(x => new DeviceResponseModel
+                    Device = device.Data.Select(x => new DeviceResponseModel
                     {
-                        BuildId = x.BuildId,
                         DeviceName = x.DeviceName,
                         Id = x.Id.ToString(),
-                    }).ToList(),*/
+                    }).ToList(),
                 }).ToList(),
             };
         }
@@ -240,7 +256,11 @@ namespace Bobi.Api.Application.Services
                     return HandleError<BuildResponseModel>("Build update fault!");
                 }
 
-                build.Data.AddressId = item.AddressId;
+                build.Data.CityId = item.CityId;
+                build.Data.ProvinceId = item.ProvinceId;
+                build.Data.TownId = item.TownId;
+                build.Data.StreetId = item.StreetId;
+                build.Data.NumberId = item.NumberId;
                 build.Data.NumberOfFloors = item.NumberOfFloors;
                 build.Data.TypeOfFeature = item.TypeOfFeature;
                 build.Data.DateOfDestructive = item.DateOfDestructive;
@@ -255,7 +275,11 @@ namespace Bobi.Api.Application.Services
                     Data = new BuildResponseModel
                     {
                         Id = result.Data.Id.ToString(),
-                        AddressId = result.Data.AddressId,
+                        CityId = result.Data.CityId,
+                        ProvinceId = result.Data.ProvinceId,
+                        TownId = result.Data.TownId,
+                        StreetId = result.Data.StreetId,
+                        NumberId = result.Data.NumberId,
                         DateOfDestructive = result.Data.DateOfDestructive,
                         Situation = result.Data.Situation,
                         TypeOfFeature = result.Data.TypeOfFeature,

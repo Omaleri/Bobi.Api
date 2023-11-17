@@ -54,6 +54,7 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new VoiceResponseModel
                     {
+                        Id = item.Id,
                         BuildId = result.Data.BuildId,
                         Link = result.Data.Link,
                         VoiceTime = result.Data.VoiceTime,
@@ -107,6 +108,7 @@ namespace Bobi.Api.Application.Services
             }
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new VoiceResponseModel
             {
+                Id = x.Id.ToString(),
                 BuildId = x.BuildId,
                 Link = x.Link,
                 VoiceDate = x.VoiceDate,
