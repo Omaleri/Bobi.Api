@@ -39,7 +39,8 @@ namespace Bobi.Api.Application.Services
             {
                 var street = new Street
                 {
-                    Name = item.Name
+                    Name = item.Name,
+                    Main = item.Main
                 };
                 var result = await _streetRepository.CreateAsync(street);
                 if (!result.IsSuccess)
@@ -50,7 +51,9 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new StreetResponseModel
                     {
-                        Name = result.Data.Name
+                        Name = result.Data.Name,
+                        Main = result.Data.Main
+
                     }
                 };
             }
@@ -83,7 +86,8 @@ namespace Bobi.Api.Application.Services
                 Data = new StreetResponseModel
                 {
                     Id = result.Data.Id.ToString(),
-                    Name = result.Data.Name
+                    Name = result.Data.Name,
+                    Main = result.Data.Main
                 }
             };
         }
@@ -99,7 +103,8 @@ namespace Bobi.Api.Application.Services
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new StreetResponseModel
             {
                 Id = x.Id.ToString(),
-                Name = x.Name
+                Name = x.Name,
+                Main = x.Main
             }).ToList();
 
             return new BaseReturnModel<List<StreetResponseModel>>
@@ -120,7 +125,8 @@ namespace Bobi.Api.Application.Services
                 Data = result.Data.Select(x => new StreetResponseModel
                 {
                     Id = x.Id.ToString(),
-                    Name = x.Name
+                    Name = x.Name,
+                    Main = x.Main
                 }).ToList(),
             };
         }
@@ -129,13 +135,14 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var report = await _streetRepository.GetByIdAsync(id);
-                if (!report.IsSuccess)
+                var street = await _streetRepository.GetByIdAsync(id);
+                if (!street.IsSuccess)
                 {
                     return HandleError<StreetResponseModel>("Street update fault!");
                 }
-                report.Data.Name = item.Name;
-                var result = await _streetRepository.UpdateAsync(report.Data, id);
+                street.Data.Name = item.Name;
+                street.Data.Main = item.Main;
+                var result = await _streetRepository.UpdateAsync(street.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<StreetResponseModel>("Street update fault!");
@@ -145,8 +152,9 @@ namespace Bobi.Api.Application.Services
                     Data = new StreetResponseModel
                     {
                         Id = result.Data.Id.ToString(),
-                        Name = result.Data.Name
-                    }
+                        Name = result.Data.Name,
+                        Main = result.Data.Main
+            }
                 };
             }
             catch (Exception)

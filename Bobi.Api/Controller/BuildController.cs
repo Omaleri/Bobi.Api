@@ -68,7 +68,7 @@ namespace Bobi.Api.Controller
             return StatusCode(result.Error[0].Code, result.Error);
         }
 
-        [HttpGet("GetListAsync/{id}")]
+        [HttpGet("GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _buildAppService.GetListAsync();

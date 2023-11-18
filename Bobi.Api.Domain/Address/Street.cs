@@ -10,5 +10,6 @@ namespace Bobi.Api.Domain.Address
     public class Street : BaseEntity
     {
         public string Name { get; set; }
+        public string Main { get; set; }
     }
 }

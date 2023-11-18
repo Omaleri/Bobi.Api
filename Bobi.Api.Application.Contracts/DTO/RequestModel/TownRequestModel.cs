@@ -10,5 +10,6 @@ namespace Bobi.Api.Application.Contracts.DTO.RequestModel
     public class TownRequestModel : BaseDtoModel
     {
         public string Name { get; set; }
+        public string Main { get; set; }
     }
 }

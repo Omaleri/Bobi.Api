@@ -39,7 +39,8 @@ namespace Bobi.Api.Application.Services
             {
                 var town = new Town
                 {
-                    Name = item.Name
+                    Name = item.Name,
+                    Main = item.Main
                 };
                 var result = await _townRepository.CreateAsync(town);
                 if (!result.IsSuccess)
@@ -50,7 +51,8 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new TownResponseModel
                     {
-                        Name = result.Data.Name
+                        Name = result.Data.Name,
+                         Main = result.Data.Main
                     }
                 };
             }
@@ -82,7 +84,8 @@ namespace Bobi.Api.Application.Services
             {
                 Data = new TownResponseModel
                 {
-                    Name = result.Data.Name
+                    Name = result.Data.Name,
+                    Main = result.Data.Main
                 }
             };
         }
@@ -97,7 +100,8 @@ namespace Bobi.Api.Application.Services
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new TownResponseModel
             {
                 Id = x.Id.ToString(),
-                Name = x.Name
+                Name = x.Name,
+                Main = x.Main
             }).ToList();
 
             return new BaseReturnModel<List<TownResponseModel>>
@@ -117,7 +121,8 @@ namespace Bobi.Api.Application.Services
             {
                 Data = result.Data.Select(x => new TownResponseModel
                 {
-                    Name = x.Name
+                    Name = x.Name,
+                    Main = x.Main
                 }).ToList(),
             };
         }
@@ -126,13 +131,15 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var report = await _townRepository.GetByIdAsync(id);
-                if (!report.IsSuccess)
+                var town = await _townRepository.GetByIdAsync(id);
+                if (!town.IsSuccess)
                 {
                     return HandleError<TownResponseModel>("Town update fault!");
                 }
-                report.Data.Name = item.Name;
-                var result = await _townRepository.UpdateAsync(report.Data, id);
+                town.Data.Name = item.Name;
+                town.Data.Main = item.Main;
+
+                var result = await _townRepository.UpdateAsync(town.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<TownResponseModel>("Town update fault!");
@@ -141,7 +148,8 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new TownResponseModel
                     {
-                        Name = result.Data.Name
+                        Name = result.Data.Name,
+                        Main = result.Data.Main
                     }
                 };
             }

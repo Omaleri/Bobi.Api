@@ -39,7 +39,8 @@ namespace Bobi.Api.Application.Services
             {
                 var number = new Number
                 {
-                    Name = item.Name
+                    Name = item.Name,
+                    Main = item.Main
                 };
                 var result = await _numberRepository.CreateAsync(number);
                 if (!result.IsSuccess)
@@ -50,7 +51,9 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new NumberResponseModel
                     {
-                        Name = result.Data.Name
+                        Name = result.Data.Name,
+                        Main = result.Data.Main
+
                     }
                 };
             }
@@ -83,7 +86,8 @@ namespace Bobi.Api.Application.Services
                 Data = new NumberResponseModel
                 {
                     Id = result.Data.Id.ToString(),
-                    Name = result.Data.Name
+                    Name = result.Data.Name,
+                    Main = result.Data.Main
                 }
             };
         }
@@ -99,7 +103,8 @@ namespace Bobi.Api.Application.Services
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new NumberResponseModel
             {
                 Id = x.Id.ToString(),
-                Name = x.Name
+                Name = x.Name,
+                Main = x.Main
             }).ToList();
 
             return new BaseReturnModel<List<NumberResponseModel>>
@@ -120,7 +125,8 @@ namespace Bobi.Api.Application.Services
                 Data = result.Data.Select(x => new NumberResponseModel
                 {
                     Id = x.Id.ToString(),
-                    Name = x.Name
+                    Name = x.Name,
+                    Main = x.Main
                 }).ToList(),
             };
         }
@@ -129,13 +135,14 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var report = await _numberRepository.GetByIdAsync(id);
-                if (!report.IsSuccess)
+                var number = await _numberRepository.GetByIdAsync(id);
+                if (!number.IsSuccess)
                 {
                     return HandleError<NumberResponseModel>("Number update fault!");
                 }
-                report.Data.Name = item.Name;
-                var result = await _numberRepository.UpdateAsync(report.Data, id);
+                number.Data.Name = item.Name;
+                number.Data.Main = item.Main;
+                var result = await _numberRepository.UpdateAsync(number.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<NumberResponseModel>("Number update fault!");
@@ -145,7 +152,8 @@ namespace Bobi.Api.Application.Services
                     Data = new NumberResponseModel
                     {
                         Id = result.Data.Id.ToString(),
-                        Name = result.Data.Name
+                        Name = result.Data.Name,
+                        Main = result.Data.Main
                     }
                 };
             }

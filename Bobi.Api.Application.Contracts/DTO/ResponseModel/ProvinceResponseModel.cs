@@ -10,5 +10,6 @@ namespace Bobi.Api.Application.Contracts.DTO.ResponseModel
     public class ProvinceResponseModel : BaseDtoModel
     {
         public string Name { get; set; }
+        public string Main { get; set; }
     }
 }

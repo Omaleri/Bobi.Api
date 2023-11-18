@@ -10,5 +10,6 @@ namespace Bobi.Api.Application.Contracts.DTO.ResponseModel
     public class StreetResponseModel : BaseDtoModel
     {
         public string Name { get; set; }
+        public string Main { get; set; }
     }
 }

@@ -10,5 +10,7 @@ namespace Bobi.Api.Domain.Address
     public class Number : BaseEntity
     {
         public string Name { get; set; }
+        public string Main { get; set; }
+
     }
 }

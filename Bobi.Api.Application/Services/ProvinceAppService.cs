@@ -38,7 +38,8 @@ namespace Bobi.Api.Application.Services
             {
                 var province = new Province
                 {
-                    Name = item.Name
+                    Name = item.Name,
+                    Main = item.Main
                 };
                 var result = await _provinceRepository.CreateAsync(province);
                 if (!result.IsSuccess)
@@ -49,7 +50,9 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new ProvinceResponseModel
                     {
-                        Name = result.Data.Name
+                        Name = result.Data.Name,
+                        Main = result.Data.Main
+
                     }
                 };
             }
@@ -82,7 +85,8 @@ namespace Bobi.Api.Application.Services
                 Data = new ProvinceResponseModel
                 {
                     Id = result.Data.Id.ToString(),
-                    Name = result.Data.Name
+                    Name = result.Data.Name,
+                    Main = result.Data.Main
                 }
             };
         }
@@ -98,7 +102,8 @@ namespace Bobi.Api.Application.Services
             var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new ProvinceResponseModel
             {
                 Id = x.Id.ToString(),
-                Name = x.Name
+                Name = x.Name,
+                Main = x.Main
             }).ToList();
 
             return new BaseReturnModel<List<ProvinceResponseModel>>
@@ -119,7 +124,8 @@ namespace Bobi.Api.Application.Services
                 Data = result.Data.Select(x => new ProvinceResponseModel
                 {
                     Id = x.Id.ToString(),
-                    Name = x.Name
+                    Name = x.Name,
+                    Main = x.Main
                 }).ToList(),
             };
         }
@@ -128,13 +134,14 @@ namespace Bobi.Api.Application.Services
         {
             try
             {
-                var report = await _provinceRepository.GetByIdAsync(id);
-                if (!report.IsSuccess)
+                var province = await _provinceRepository.GetByIdAsync(id);
+                if (!province.IsSuccess)
                 {
                     return HandleError<ProvinceResponseModel>("Province update fault!");
                 }
-                report.Data.Name = item.Name;
-                var result = await _provinceRepository.UpdateAsync(report.Data, id);
+                province.Data.Name = item.Name;
+                province.Data.Main = item.Main;
+                var result = await _provinceRepository.UpdateAsync(province.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<ProvinceResponseModel>("Province update fault!");
@@ -144,7 +151,8 @@ namespace Bobi.Api.Application.Services
                     Data = new ProvinceResponseModel
                     {
                         Id = result.Data.Id.ToString(),
-                        Name = result.Data.Name
+                        Name = result.Data.Name,
+                        Main = result.Data.Main
                     }
                 };
             }
