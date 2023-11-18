@@ -124,17 +124,17 @@ namespace Bobi.Api.Application.Services
             };
         }
 
-        public async Task<BaseReturnModel<ProvinceResponseModel>> UpdateAsync(ProvinceRequestModel item)
+        public async Task<BaseReturnModel<ProvinceResponseModel>> UpdateAsync(ProvinceRequestModel item, string id)
         {
             try
             {
-                var report = await _provinceRepository.GetByIdAsync(item.Id);
+                var report = await _provinceRepository.GetByIdAsync(id);
                 if (!report.IsSuccess)
                 {
                     return HandleError<ProvinceResponseModel>("Province update fault!");
                 }
                 report.Data.Name = item.Name;
-                var result = await _provinceRepository.UpdateAsync(report.Data);
+                var result = await _provinceRepository.UpdateAsync(report.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<ProvinceResponseModel>("Province update fault!");

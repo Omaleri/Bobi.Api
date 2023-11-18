@@ -91,11 +91,11 @@ namespace Bobi.Api.Application.Services
             };
         }
 
-        public async Task<BaseReturnModel<UserResponseModel>> UpdateAsync(UserRequestModel item)
+        public async Task<BaseReturnModel<UserResponseModel>> UpdateAsync(UserRequestModel item, string id)
         {
             try
             {
-                var user = await _userRepository.GetByIdAsync(item.Id);
+                var user = await _userRepository.GetByIdAsync(id);
                 if (!user.IsSuccess)
                 {
                     return HandleError<UserResponseModel>("User update fault!");
@@ -103,7 +103,7 @@ namespace Bobi.Api.Application.Services
                 user.Data.isAdmin = item.isAdmin;
                 user.Data.Email = item.Email;
                 user.Data.Password = item.Password;
-                var result = await _userRepository.UpdateAsync(user.Data);
+                var result = await _userRepository.UpdateAsync(user.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<UserResponseModel>("User update fault!");

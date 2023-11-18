@@ -125,18 +125,18 @@ namespace Bobi.Api.Application.Services
             };
         }
 
-        public async Task<BaseReturnModel<CityResponseModel>> UpdateAsync(CityRequestModel item)
+        public async Task<BaseReturnModel<CityResponseModel>> UpdateAsync(CityRequestModel item, string id)
         {
             try
             {
                 
-                var build = await _cityRepository.GetByIdAsync(item.Id);
+                var build = await _cityRepository.GetByIdAsync(id);
                 if (!build.IsSuccess)
                 {
                     return HandleError<CityResponseModel>("City update fault!");
                 }
                 build.Data.Name = item.Name;
-                var result = await _cityRepository.UpdateAsync(build.Data);
+                var result = await _cityRepository.UpdateAsync(build.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<CityResponseModel>("City update fault!");

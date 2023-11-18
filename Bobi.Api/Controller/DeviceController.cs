@@ -19,8 +19,7 @@ namespace Bobi.Api.Controller
             _deviceAppService = deviceAppService;
         }
 
-        [HttpPost]
-        [Route("api/device")]
+        [HttpPost("CreateAsync")]
         public async Task<IActionResult> CreateAsync(DeviceRequestModel requestModel)
         {
             var result = await _deviceAppService.CreateAsync(requestModel);
@@ -32,8 +31,7 @@ namespace Bobi.Api.Controller
             return StatusCode(result.Error[0].Code, result.Error);
         }
 
-        [HttpDelete]
-        [Route("DeleteAsync/{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteAsync(string id)
         {
             var result = await _deviceAppService.DeleteAsync(id);
@@ -60,9 +58,9 @@ namespace Bobi.Api.Controller
 
         [HttpPut]
         [Route("UpdateAsync")]
-        public async Task<IActionResult> UpdateAsync(DeviceRequestModel requestModel)
+        public async Task<IActionResult> UpdateAsync(DeviceRequestModel requestModel, string id)
         {
-            var result = await _deviceAppService.UpdateAsync(requestModel);
+            var result = await _deviceAppService.UpdateAsync(requestModel, id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);

@@ -58,9 +58,9 @@ namespace Bobi.Api.Controller
 
         [HttpPut]
         [Route("api/province/")]
-        public async Task<IActionResult> UpdateAsync(ProvinceRequestModel requestModel)
+        public async Task<IActionResult> UpdateAsync(ProvinceRequestModel requestModel, string id)
         {
-            var result = await _provinceAppService.UpdateAsync(requestModel);
+            var result = await _provinceAppService.UpdateAsync(requestModel, id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);

@@ -374,7 +374,7 @@ namespace Bobi.Api.MongoDb.Repositories.Base
             }
         }
 
-        public async Task<BaseReturnModel<Device>> UpdateAsync(Device item)
+        public async Task<BaseReturnModel<Device>> UpdateAsync(Device item, string id)
         {
 
             try

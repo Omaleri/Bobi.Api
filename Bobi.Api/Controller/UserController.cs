@@ -56,9 +56,9 @@ namespace Bobi.Api.Controller
 
         [HttpPut]
         [Route("api/user/")]
-        public async Task<IActionResult> UpdateAsync(UserRequestModel requestModel)
+        public async Task<IActionResult> UpdateAsync(UserRequestModel requestModel, string id)
         {
-            var result = await _userAppService.UpdateAsync(requestModel);
+            var result = await _userAppService.UpdateAsync(requestModel, id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);

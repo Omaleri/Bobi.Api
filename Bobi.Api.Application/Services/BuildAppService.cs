@@ -162,8 +162,7 @@ namespace Bobi.Api.Application.Services
                     Device = device.Data.Select(x => new DeviceResponseModel
                     {
                         DeviceName = x.DeviceName,
-                        Id = x.Id.ToString(),
-
+                        Id = x.Id.ToString()
                     }).ToList(),
                     NumberOfFloors = build.Data.NumberOfFloors,
                     Situation = build.Data.Situation,
@@ -180,7 +179,7 @@ namespace Bobi.Api.Application.Services
             }
 
             var device = await _deviceRepository.GetListAsync();
-            if (!build.IsSuccess)
+            if (!device.IsSuccess)
             {
                 return HandleError<List<BuildResponseModel>>("Device get list fault!");
             }
@@ -246,17 +245,40 @@ namespace Bobi.Api.Application.Services
             };
         }
 
-        public async Task<BaseReturnModel<BuildResponseModel>> UpdateAsync(BuildRequestModel item)
+        public async Task<BaseReturnModel<BuildResponseModel>> UpdateAsync(BuildRequestModel item,string id)
         {
             try
             {
-                var build = await _buildRepository.GetByIdAsync(item.Id);
+                var device = await _deviceRepository.GetListAsync();
+                if (!device.IsSuccess)
+                {
+                    return HandleError<BuildResponseModel>("Device get list fault!");
+                }
+
+                var build = await _buildRepository.GetByIdAsync(id);
                 if (!build.IsSuccess)
                 {
                     return HandleError<BuildResponseModel>("Build update fault!");
                 }
 
-                build.Data.CityId = item.CityId;
+                Console.Write("Lütfen cihaz adını girin: ");
+                string desiredDeviceName = Console.ReadLine();
+
+                // Alınan cihaz adına göre cihazı bul
+                var selectedDevice = device.Data.FirstOrDefault(x => x.DeviceName == desiredDeviceName);
+
+                if (selectedDevice != null)
+                {
+                    // Cihazı build içerisine yaz
+                    build.Data.Device = new List<Device> { selectedDevice };
+                }
+                else
+                {
+                    return HandleError<BuildResponseModel>("Belirtilen cihaz adına sahip bir cihaz bulunamadı!");
+                }
+
+
+                /*build.Data.CityId = item.CityId;
                 build.Data.ProvinceId = item.ProvinceId;
                 build.Data.TownId = item.TownId;
                 build.Data.StreetId = item.StreetId;
@@ -264,8 +286,9 @@ namespace Bobi.Api.Application.Services
                 build.Data.NumberOfFloors = item.NumberOfFloors;
                 build.Data.TypeOfFeature = item.TypeOfFeature;
                 build.Data.DateOfDestructive = item.DateOfDestructive;
-                build.Data.Situation = item.Situation;
-                var result = await _buildRepository.UpdateAsync(build.Data);
+                build.Data.Situation = item.Situation;*/
+                
+                var result = await _buildRepository.UpdateAsync(build.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<BuildResponseModel>("Build update fault!");
@@ -283,7 +306,7 @@ namespace Bobi.Api.Application.Services
                         DateOfDestructive = result.Data.DateOfDestructive,
                         Situation = result.Data.Situation,
                         TypeOfFeature = result.Data.TypeOfFeature,
-                        NumberOfFloors = result.Data.NumberOfFloors
+                        NumberOfFloors = result.Data.NumberOfFloors,
                     }
                 };
             }

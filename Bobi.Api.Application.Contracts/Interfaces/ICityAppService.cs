@@ -16,7 +16,7 @@ namespace Bobi.Api.Application.Contracts.Interfaces
         Task<BaseReturnModel<CityResponseModel>> CreateAsync(CityRequestModel item);
         Task<BaseReturnModel<List<CityResponseModel>>> GetListByFilterAsync(Expression<Func<City, bool>> exp);
         Task<BaseReturnModel<CityResponseModel>> GetByIdAsync(string id);
-        Task<BaseReturnModel<CityResponseModel>> UpdateAsync(CityRequestModel item);
+        Task<BaseReturnModel<CityResponseModel>> UpdateAsync(CityRequestModel item, string id);
         Task<BaseReturnModel<bool>> DeleteAsync(string id);
         Task<BaseReturnModel<List<CityResponseModel>>> GetListAsync();
     }

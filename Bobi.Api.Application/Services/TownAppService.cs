@@ -122,17 +122,17 @@ namespace Bobi.Api.Application.Services
             };
         }
 
-        public async Task<BaseReturnModel<TownResponseModel>> UpdateAsync(TownRequestModel item)
+        public async Task<BaseReturnModel<TownResponseModel>> UpdateAsync(TownRequestModel item, string id)
         {
             try
             {
-                var report = await _townRepository.GetByIdAsync(item.Id);
+                var report = await _townRepository.GetByIdAsync(id);
                 if (!report.IsSuccess)
                 {
                     return HandleError<TownResponseModel>("Town update fault!");
                 }
                 report.Data.Name = item.Name;
-                var result = await _townRepository.UpdateAsync(report.Data);
+                var result = await _townRepository.UpdateAsync(report.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<TownResponseModel>("Town update fault!");

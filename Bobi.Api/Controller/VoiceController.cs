@@ -58,9 +58,9 @@ namespace Bobi.Api.Controller
 
         [HttpPut]
         [Route("api/voice/")]
-        public async Task<IActionResult> UpdateAsync(VoiceRequestModel requestModel)
+        public async Task<IActionResult> UpdateAsync(VoiceRequestModel requestModel, string id)
         {
-            var result = await _voiceAppService.UpdateAsync(requestModel);
+            var result = await _voiceAppService.UpdateAsync(requestModel, id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);

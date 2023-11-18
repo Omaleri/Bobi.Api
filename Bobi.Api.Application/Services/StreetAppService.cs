@@ -125,17 +125,17 @@ namespace Bobi.Api.Application.Services
             };
         }
 
-        public async Task<BaseReturnModel<StreetResponseModel>> UpdateAsync(StreetRequestModel item)
+        public async Task<BaseReturnModel<StreetResponseModel>> UpdateAsync(StreetRequestModel item, string id)
         {
             try
             {
-                var report = await _streetRepository.GetByIdAsync(item.Id);
+                var report = await _streetRepository.GetByIdAsync(id);
                 if (!report.IsSuccess)
                 {
                     return HandleError<StreetResponseModel>("Street update fault!");
                 }
                 report.Data.Name = item.Name;
-                var result = await _streetRepository.UpdateAsync(report.Data);
+                var result = await _streetRepository.UpdateAsync(report.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<StreetResponseModel>("Street update fault!");

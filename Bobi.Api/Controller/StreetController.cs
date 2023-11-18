@@ -59,9 +59,9 @@ namespace Bobi.Api.Controller
 
         [HttpPut]
         [Route("api/street/")]
-        public async Task<IActionResult> UpdateAsync(StreetRequestModel requestModel)
+        public async Task<IActionResult> UpdateAsync(StreetRequestModel requestModel, string id)
         {
-            var result = await _streetAppService.UpdateAsync(requestModel);
+            var result = await _streetAppService.UpdateAsync(requestModel, id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);

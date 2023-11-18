@@ -369,7 +369,7 @@ namespace Bobi.Api.MongoDb.Repositories.Base
             }
         }
 
-        public async Task<BaseReturnModel<T>> UpdateAsync(T item)
+        public async Task<BaseReturnModel<T>> UpdateAsync(T item, string id)
         {
 
             try

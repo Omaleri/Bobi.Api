@@ -123,17 +123,17 @@ namespace Bobi.Api.Application.Services
             };
         }
 
-        public async Task<BaseReturnModel<DeviceResponseModel>> UpdateAsync(DeviceRequestModel item)
+        public async Task<BaseReturnModel<DeviceResponseModel>> UpdateAsync(DeviceRequestModel item, string id)
         {
             try
             {
-                var device = await _deviceRepository.GetByIdAsync(item.Id);
+                var device = await _deviceRepository.GetByIdAsync(id);
                 if (!device.IsSuccess)
                 {
                     return HandleError<DeviceResponseModel>("Device update fault!");
                 }
                 device.Data.DeviceName = item.DeviceName;
-                var result = await _deviceRepository.UpdateAsync(device.Data);
+                var result = await _deviceRepository.UpdateAsync(device.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<DeviceResponseModel>("Device update fault!");
@@ -142,7 +142,6 @@ namespace Bobi.Api.Application.Services
                 {
                     Data = new DeviceResponseModel
                     {
-                        Id = result.Data.Id.ToString(),
                         DeviceName = result.Data.DeviceName
                     }
                 };

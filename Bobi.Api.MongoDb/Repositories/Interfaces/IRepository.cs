@@ -11,7 +11,7 @@ namespace Bobi.Api.MongoDb.Repositories.Interfaces
         Task<BaseReturnModel<List<T>>> GetListByFilterAsync(Expression<Func<T, bool>> exp);
         Task<BaseReturnModel<T>> GetByFilterAsync(Expression<Func<T, bool>> exp);
         Task<BaseReturnModel<T>> GetByIdAsync(string id);
-        Task<BaseReturnModel<T>> UpdateAsync(T item);
+        Task<BaseReturnModel<T>> UpdateAsync(T item, string id);
         Task<BaseReturnModel<bool>> DeleteAsync(string id);
         Task<BaseReturnModel<List<T>>> GetListAsync();
         Task<BaseReturnModel<List<T>>> CreateManyAsync(List<T> item);

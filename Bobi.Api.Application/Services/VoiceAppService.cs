@@ -140,11 +140,11 @@ namespace Bobi.Api.Application.Services
             };
         }
 
-        public async Task<BaseReturnModel<VoiceResponseModel>> UpdateAsync(VoiceRequestModel item)
+        public async Task<BaseReturnModel<VoiceResponseModel>> UpdateAsync(VoiceRequestModel item, string id)
         {
             try
             {
-                var voice = await _voiceRepository.GetByIdAsync(item.Id);
+                var voice = await _voiceRepository.GetByIdAsync(id);
                 if (!voice.IsSuccess)
                 {
                     return HandleError<VoiceResponseModel>("Voice update fault!");
@@ -153,7 +153,7 @@ namespace Bobi.Api.Application.Services
                 voice.Data.Link = item.Link;
                 voice.Data.VoiceDate = item.VoiceDate;
                 voice.Data.VoiceTime = item.VoiceTime;
-                var result = await _voiceRepository.UpdateAsync(voice.Data);
+                var result = await _voiceRepository.UpdateAsync(voice.Data, id);
                 if (!result.IsSuccess)
                 {
                     return HandleError<VoiceResponseModel>("Voice update fault!");

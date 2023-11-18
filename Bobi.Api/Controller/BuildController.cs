@@ -56,11 +56,10 @@ namespace Bobi.Api.Controller
             return StatusCode(result.Error[0].Code, result.Error);
         }
 
-        [HttpPut]
-        [Route("api/build/")]
-        public async Task<IActionResult> UpdateAsync(BuildRequestModel requestModel)
+        [HttpPut("UpdateAsync")]
+        public async Task<IActionResult> UpdateAsync(BuildRequestModel requestModel, string id)
         {
-            var result = await _buildAppService.UpdateAsync(requestModel);
+            var result = await _buildAppService.UpdateAsync(requestModel, id);
             if (result.IsSuccess)
             {
                 return Ok(result.Data);
@@ -69,7 +68,7 @@ namespace Bobi.Api.Controller
             return StatusCode(result.Error[0].Code, result.Error);
         }
 
-        [HttpGet("GetListAsync")]
+        [HttpGet("GetListAsync/{id}")]
         public async Task<IActionResult> GetListAsync()
         {
             var result = await _buildAppService.GetListAsync();

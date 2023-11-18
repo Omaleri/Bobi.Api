@@ -374,7 +374,7 @@ namespace Bobi.Api.MongoDb.Repositories.Base
             }
         }
 
-        public async Task<BaseReturnModel<Voice>> UpdateAsync(Voice item)
+        public async Task<BaseReturnModel<Voice>> UpdateAsync(Voice item, string id)
         {
 
             try
