@@ -3,6 +3,7 @@ using Bobi.Api.Application.Contracts.DTO.ResponseModel;
 using Bobi.Api.Application.Contracts.Interfaces;
 using Bobi.Api.Application.Domain.Shared.Abstract;
 using Bobi.Api.Domain.User;
+using Bobi.Api.MongoDb.Repositories.Base;
 using Bobi.Api.MongoDb.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -12,8 +13,8 @@ namespace Bobi.Api.Application.Services
     {
 
         private readonly ILogger<UserAppService> _logger;
-        private readonly IRepository<User> _userRepository;
-        public UserAppService(ILogger<UserAppService> logger, IRepository<User> userRepository)
+        private readonly MongoDb.Repositories.Interfaces.IRepository<User> _userRepository;
+        public UserAppService(ILogger<UserAppService> logger, MongoDb.Repositories.Interfaces.IRepository<User> userRepository)
         {
             _logger = logger;
             _userRepository = userRepository;
@@ -122,6 +123,29 @@ namespace Bobi.Api.Application.Services
             {
                 return HandleError<UserResponseModel>("User update fault!");
             }
+        }
+
+        public async Task<BaseReturnModel<List<UserResponseModel>>> GetListAsync()
+        {
+            var result = await _userRepository.GetListAsync();
+            if (!result.IsSuccess)
+            {
+                return HandleError<List<UserResponseModel>>("User list get fault!");
+
+            }
+            var filteredData = result.Data.Where(x => !x.IsDeleted).Select(x => new UserResponseModel
+            {
+                Id = x.Id.ToString(),
+                Email = x.Email,
+                isAdmin=x.isAdmin,
+                Password = x.Password
+                
+            }).ToList();
+
+            return new BaseReturnModel<List<UserResponseModel>>
+            {
+                Data = filteredData
+            };
         }
     }
 }

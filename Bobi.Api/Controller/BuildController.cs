@@ -17,8 +17,7 @@ namespace Bobi.Api.Controller
             _buildAppService = buildAppService;
         }
 
-        [HttpPost]
-        [Route("api/build")]
+        [HttpPost ("CreateBuild")]
         public async Task<IActionResult> CreateAsync(BuildRequestModel requestModel)
         {
             var result = await _buildAppService.CreateAsync(requestModel);
@@ -31,7 +30,7 @@ namespace Bobi.Api.Controller
         }
 
         [HttpDelete]
-        [Route("/delete/{id}")]
+        [Route("Delete/{id}")]
         public async Task<IActionResult> DeleteAsync(string id)
         {
             var result = await _buildAppService.DeleteAsync(id);
@@ -43,8 +42,7 @@ namespace Bobi.Api.Controller
             return StatusCode(result.Error[0].Code, result.Error);
         }
 
-        [HttpGet]
-        [Route("api/build/{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetByIdAsync(string id)
         {
             var result = await _buildAppService.GetByIdAsync(id);

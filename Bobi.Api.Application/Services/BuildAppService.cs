@@ -75,7 +75,6 @@ namespace Bobi.Api.Application.Services
                 TownId = item.TownId,
                 StreetId = item.StreetId,
                 NumberId = item.NumberId,
-                DateOfDestructive = item.DateOfDestructive,
                 NumberOfFloors = item.NumberOfFloors,
                 Situation = item.Situation,
                 TypeOfFeature = item.TypeOfFeature,
@@ -99,7 +98,6 @@ namespace Bobi.Api.Application.Services
                     TownId = item.TownId,
                     StreetId = item.StreetId,
                     NumberId = item.NumberId,
-                    DateOfDestructive = item.DateOfDestructive,
                     NumberOfFloors = item.NumberOfFloors,
                     Situation = item.Situation,
                     TypeOfFeature = item.TypeOfFeature,
@@ -117,10 +115,8 @@ namespace Bobi.Api.Application.Services
             var buildResult = await _buildRepository.GetByIdAsync(id);
             if (buildResult.IsSuccess)
             {
-                //var deviceResult = await _deviceRepository.GetByFilterAsync(x => x.BuildId == id.ToString());
                 try
                 {
-                    //var device = await _deviceRepository.DeleteManyAsync(x => x.BuildId == id.ToString());
                     var build = await _buildRepository.DeleteAsync(id);
                 }
                 catch (Exception)
@@ -145,7 +141,7 @@ namespace Bobi.Api.Application.Services
                 return HandleError<BuildResponseModel>($"Build Id: {id} Not Found");
             }
 
-            var device = await _deviceRepository.GetListByFilterAsync(x => x.Id.ToString() == id);
+            var device = await _deviceRepository.GetListByFilterAsync(x => x.Id == build.Data.Device.FirstOrDefault().Id);
 
             return new BaseReturnModel<BuildResponseModel>
             {
@@ -159,7 +155,7 @@ namespace Bobi.Api.Application.Services
                     StreetId = build.Data.StreetId,
                     NumberId = build.Data.NumberId,
                     DateOfDestructive = build.Data.DateOfDestructive,
-                    Device = device.Data.Select(x => new DeviceResponseModel
+                    Device = device.Data?.Select(x => new DeviceResponseModel
                     {
                         DeviceName = x.DeviceName,
                         Id = x.Id.ToString()

@@ -17,5 +17,7 @@ namespace Bobi.Api.Application.Contracts.Interfaces
         Task<BaseReturnModel<UserResponseModel>> GetByIdAsync(string id);
         Task<BaseReturnModel<UserResponseModel>> UpdateAsync(UserRequestModel item, string id);
         Task<BaseReturnModel<bool>> DeleteAsync(string id);
+        Task<BaseReturnModel<List<UserResponseModel>>> GetListAsync();
+
     }
 }

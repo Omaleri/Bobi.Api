@@ -1,5 +1,6 @@
 ﻿using Bobi.Api.Application.Contracts.DTO.RequestModel;
 using Bobi.Api.Application.Contracts.Interfaces;
+using Bobi.Api.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bobi.Api.Controller
@@ -64,6 +65,19 @@ namespace Bobi.Api.Controller
                 return Ok(result.Data);
             }
             _logger.LogError("Error updating user", requestModel);
+            return StatusCode(result.Error[0].Code, result.Error);
+        }
+
+        [HttpGet]
+        [Route("api/user/GetListAsync")]
+        public async Task<IActionResult> GetListAsync()
+        {
+            var result = await _userAppService.GetListAsync();
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            _logger.LogError("User get fault!");
             return StatusCode(result.Error[0].Code, result.Error);
         }
     }
